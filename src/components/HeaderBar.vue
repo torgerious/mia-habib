@@ -34,6 +34,7 @@
 
     .dark{
         background:#333;
+
     }
 
     header{
