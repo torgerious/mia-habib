@@ -7,7 +7,9 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@firebase/polyfill": "^0.3.36",
     "core-js": "^3.6.5",
+    "firebase": "^8.2.9",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^9.1.2",

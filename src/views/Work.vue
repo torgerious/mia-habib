@@ -16,7 +16,6 @@
 
     export default class Work extends Vue {
         created(): void {
-            console.log("HELO");
         }
     }
 
