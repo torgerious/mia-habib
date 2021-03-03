@@ -28,12 +28,13 @@
                     // Signed in
                     let user = userCredential.user;
                     console.log("user", user);
-                    console.log("Logged in");
+                    this.$router.push("/profile");
                     // ...
                 })
                 .catch((error) => {
                     let errorCode = error.code;
                     let errorMessage = error.message;
+                    alert(errorCode);
                 });
         }
     }

@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Work from "@/views/Work.vue";
 import Login from "@/views/Login.vue";
+import Profile from "@/views/Profile.vue";
 
 Vue.use(VueRouter);
 
@@ -11,6 +12,8 @@ const routes: Array<RouteConfig> = [
   { path: '/work', name: 'Work', component: Work },
 
   { path: '/login', name: 'Login', component: Login},
+  { path: '/profile', name: 'profile', component: Profile},
+
   {path: '/about', name: 'About',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

@@ -8,15 +8,19 @@
   },
   "dependencies": {
     "@firebase/polyfill": "^0.3.36",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "firebase": "^8.2.9",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vue2-editor": "^2.10.2",
+    "vuex": "^3.4.0",
+    "vuex-class": "latest"
   },
   "devDependencies": {
+    "@types/vue2-editor": "^2.6.1",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
