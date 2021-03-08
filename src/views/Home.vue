@@ -1,15 +1,24 @@
 <template>
   <div class="home">
-    <div class="home--main">
+    <div class="home--main" :style="{ 'background-image': 'url(' + backgroundImages[backgroundImageIndex] + ')' }">
       <header-bar></header-bar>
+      <div class="prev"  @click="prevImage">&#10094;</div>
+      <div class="next"  @click="nextImage">&#10095;</div>
+
+<!--      <div class="image-indicator">-->
+<!--        <div v-for="(item, i) in backgroundImages" :key="i">-->
+<!--          <span v-if="i === backgroundImageIndex"></span>-->
+<!--        </div>-->
+<!--      </div>-->
 
     </div>
+    <br>
 
-    <div class="home--content">
-
+    <loader v-if="loading"></loader>
+    <div  v-else class="home--content">
       <article v-for="(work, i) in workList" :key="i + 'name'">
         <div>
-          <img :src="work.imageUrl" alt="image">
+          <img :src="work.imageIngressUrl" alt="image">
         </div>
         <p>{{work.title}}</p>
       </article>
@@ -17,12 +26,19 @@
 
       <button @click="navigate('work')">All work</button>
     </div>
+    <div>
+    <footer-main></footer-main>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import HeaderBar from "@/components/HeaderBar.vue";
+import {Action} from "vuex-class";
+import {actionStringWork, IWork} from "@/store/work";
+import Loader from "@/components/loader.vue";
+import FooterMain from "@/components/FooterMain.vue";
 
 interface IArticle{
   imageUrl:string,
@@ -31,22 +47,54 @@ interface IArticle{
 
 @Component({
   components: {
+    FooterMain,
+    Loader,
     HeaderBar
   },
 })
 
 export default class Home extends Vue {
-  workList:IArticle[] = [
-     {imageUrl:"https://scx2.b-cdn.net/gfx/news/2019/2-nature.jpg", title:"Some title"},
-     {imageUrl:"https://scx2.b-cdn.net/gfx/news/2019/2-nature.jpg", title:"Some title"},
-     {imageUrl:"https://scx2.b-cdn.net/gfx/news/2019/2-nature.jpg", title:"Some title"},
-     {imageUrl:"https://scx2.b-cdn.net/gfx/news/2019/2-nature.jpg", title:"Some title"},
-     {imageUrl:"https://scx2.b-cdn.net/gfx/news/2019/2-nature.jpg", title:"Some title"},
-     {imageUrl:"https://scx2.b-cdn.net/gfx/news/2019/2-nature.jpg", title:"Some title"},
-  ];
+  workList:IWork[] = [];
+
+  backgroundImages:Array<string> = ["mia-habib.jpeg", "mia-4.jpg", "mia-6.jpg"];
+  backgroundImageIndex:number = 0;
+  loading:boolean = false;
+
+  @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
+
+
+  nextImage():void{
+    if(this.backgroundImageIndex === this.backgroundImages.length-1){
+      this.backgroundImageIndex = 0;
+    }else {
+    this.backgroundImageIndex = this.backgroundImageIndex +1;
+    }
+
+  }
+  prevImage():void{
+    if(this.backgroundImageIndex === 0){
+      this.backgroundImageIndex = this.backgroundImages.length -1;
+    } else{
+      this.backgroundImageIndex = this.backgroundImageIndex -1;
+    }
+  }
 
   navigate(route:string):void{
     this.$router.push(route);
+  }
+
+  created():void{
+    if(this.getWork){
+      this.loading = true;
+      this.getWork().then(res => {
+        console.log(res);
+        this.workList = res;
+        this.loading = false;
+      }).catch(err => {
+        console.log(err);
+        this.loading = false;
+      })
+    }
   }
 
 }
@@ -60,8 +108,66 @@ export default class Home extends Vue {
         width:100%;
         height: 100vh;
         background-blend-mode: multiply;
+        /*background: #05050669 url("../assets/mia-habib.jpeg") no-repeat center;*/
         background-size: cover;
-        background: #05050669 url("../assets/mia-habib.jpeg") no-repeat center;
+      -webkit-transition: background 1s;
+      -moz-transition: background 1s;
+      -o-transition: background 1s;
+      transition: background 1s;
+      background-color: #5e5b5b9c;
+      .prev{
+        position: absolute;
+        margin-top: 45vh;
+        left: 10px;
+        font-size: 35px;
+        padding: 0 12px;
+        color: white;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .next{
+        position: absolute;
+        margin-top: 45vh;
+        /* background: white; */
+        right: 10px;
+        font-size: 35px;
+        padding: 0 12px;
+        color: white;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .image-indicator{
+        width: 10%;
+        position: absolute;
+        bottom: 6px;
+        height: 30px;
+        display: block;
+        margin: 0 45%;
+        div{
+          display: inline-block;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          background: #fffbfb;
+          justify-content: space-between;
+          margin: 0 5px;
+          span{
+            background: #202020;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: block;
+            margin: -2px -2px;
+            transition: 0.2s;
+          }
+        }
+      }
     }
 
     &--content{

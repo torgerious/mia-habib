@@ -30,6 +30,7 @@ export const enum actionStringWork{
     GET_WORK = 'getWork',
     POST_WORK = 'postWork',
     UPDATE_WORK = 'updateUser',
+    GET_WORK_BY_ID = 'getWorkById'
 }
 export const enum getterStringWork{
     work = 'work'
@@ -74,6 +75,37 @@ export const actions: ActionTree<WorkState, any> = {
 
         });
 
+
+    },
+
+    getWorkById({commit, dispatch}, workId:string):Promise<IWork>{
+        return new Promise((resolve, reject) => {
+            let workList: IWork[] = [];
+            DB.collection("work").where("title", "==", workId).get().then((doc:any) => {
+                doc.forEach((res: { data: () => Partial<IWork>; id: any; }) => {
+                    let work: Partial<IWork> = res.data();
+
+
+
+                    let newWork = {
+                        imageUrl:work.imageUrl,
+                        title:work.title,
+                        category:work.category,
+                        content:work.content,
+                        imageIngressUrl:work.imageIngressUrl
+                    };
+
+                    workList.push(newWork as IWork);
+
+
+                });
+                resolve(workList[0]);
+
+            }).catch((e:Error) => {
+                console.log("Error", e);
+                reject(e);
+            });
+        });
 
     },
 
