@@ -115,18 +115,37 @@ export default class Home extends Vue {
       -o-transition: background 1s;
       transition: background 1s;
       background-color: #5e5b5b9c;
+      &:hover .prev{
+        opacity: 1;
+        transition: 0.3s;
+        margin-left: 10px;
+      }
+      &:hover .next{
+        opacity: 1;
+        transition: 0.3s;
+        margin-right: 10px;
+
+      }
       .prev{
         position: absolute;
         margin-top: 45vh;
         left: 10px;
         font-size: 35px;
-        padding: 0 12px;
+        /*padding: 0 12px;*/
         color: white;
         cursor: pointer;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        background: hsla(0,0%,100%,.25);
+        border-radius: 50%;
+        padding: 5px 21px;
+        /*border: 2px solid #ffffff36;*/
+        line-height: 50px;
+        transition: 0.3s;
+        opacity: 0;
+
       }
       .next{
         position: absolute;
@@ -134,13 +153,21 @@ export default class Home extends Vue {
         /* background: white; */
         right: 10px;
         font-size: 35px;
-        padding: 0 12px;
+        /*padding: 0 12px;*/
         color: white;
         cursor: pointer;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        background: hsla(0,0%,100%,.25);
+        border-radius: 50%;
+        padding: 5px 21px;
+        /*border: 2px solid #ffffff36;*/
+        line-height: 50px;
+        transition: 0.3s;
+        opacity: 0;
+
       }
       .image-indicator{
         width: 10%;
@@ -172,20 +199,21 @@ export default class Home extends Vue {
 
     &--content{
       width: 100%;
-      padding: 30px;
+      /*padding: 30px;*/
       display: flex;
       flex-wrap: wrap;
       flex-direction: row;
       box-sizing: border-box;
       justify-content: center;
-      margin-top: 40px;
+      max-width: 1100px;
+      margin: 40px auto;
       @media screen and (max-width: 800px) {
         padding: 10px;
       }
       article{
         width: 31%;
         justify-content: space-between;
-        height: 250px;
+        height: auto;
         margin: 5px 1%;
         text-align: left;
         @media screen and (max-width: 800px) {
@@ -199,7 +227,7 @@ export default class Home extends Vue {
         }
         img{
           width:100%;
-          height: 200px;
+          height: 250px;
           object-fit: cover;
         }
       }
@@ -211,6 +239,7 @@ export default class Home extends Vue {
         background: white;
         font-weight: 700;
         text-transform: uppercase;
+        margin:70px auto;
         &:hover{
           background: black;
           color:white;
