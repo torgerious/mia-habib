@@ -24,7 +24,7 @@ export enum Category {
 
 
 export const enum mutationStringWork{
-    // SET_USER = 'setUser'
+    SET_WORK = 'setWork'
 }
 export const enum actionStringWork{
     GET_WORK = 'getWork',
@@ -33,11 +33,11 @@ export const enum actionStringWork{
     GET_WORK_BY_ID = 'getWorkById'
 }
 export const enum getterStringWork{
-    work = 'work'
+    WORK = 'work'
 }
 
 export const state:WorkState = {
-    work:null
+    work:[],
 };
 
 export const getters: GetterTree<WorkState, any> = {
@@ -45,7 +45,7 @@ export const getters: GetterTree<WorkState, any> = {
 };
 
 export const mutations: MutationTree<any> = {
-    // setUser(state, payload:IUser){ console.log("PAYLOAD", payload), state.user = payload;}
+    setWork(state, payload:IWork[]){ console.log("PAYLOAD", payload), state.work = payload;}
 };
 
 export const actions: ActionTree<WorkState, any> = {
@@ -64,7 +64,7 @@ export const actions: ActionTree<WorkState, any> = {
                     workList.push(newContact as IWork);
                 });
 
-                // commit(mutationStringContact.SET_CONTACTS, contacts);
+                commit(mutationStringWork.SET_WORK, workList);
                 resolve(workList);
 
             }).catch((err) => {
@@ -109,8 +109,9 @@ export const actions: ActionTree<WorkState, any> = {
 
     },
 
-    postWork({commit, dispatch}, newWork:Partial<IWork>): void {
+    postWork({commit, dispatch}, newWork:Partial<IWork>): Promise<void> {
         console.log(newWork);
+        return new Promise((resolve, reject) => {
         DB.collection("work").doc().set({
             title: newWork.title,
             content: newWork.content,
@@ -118,9 +119,12 @@ export const actions: ActionTree<WorkState, any> = {
             category: newWork.category,
             imageIngressUrl: newWork.imageIngressUrl
         }).then((res: any) => {
+            resolve(res);
             dispatch(actionStringWork.GET_WORK);
         }).catch((err: any) => {
             console.log(err);
+            reject(err);
+        })
         })
     },
 
