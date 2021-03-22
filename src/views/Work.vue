@@ -100,7 +100,7 @@
     .filter{
         display: flex;
         padding: 0 0px;
-        width: 284px;
+        width:530px;
         justify-content: space-between;
     }
 

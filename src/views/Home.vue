@@ -23,8 +23,9 @@
         <p>{{work.title}}</p>
       </article>
 
-
+    <div class="btn-wrapper">
       <button @click="navigate('work')">All work</button>
+    </div>
     </div>
     <div>
     <footer-main></footer-main>
@@ -101,6 +102,12 @@ export default class Home extends Vue {
 </script>
 
 <style lang="scss" scoped>
+
+
+.btn-wrapper{
+  width: 100%;
+}
+
   .home{
     width:100%;
     height: auto;

@@ -44,9 +44,21 @@
                 <img loading=lazy :src="item.imageIngressUrl" alt="ingress">
                 <h4> {{item.title.substring(0,10)+".." }}</h4>
                 <p><span>{{item.category}}</span></p>
-                <button>Edit</button>
+                <button @click="editArticle(item.title)">Edit</button>
             </article>
         </div>
+
+      <div v-if="isEditingArticle" class="add-wrapper">
+        <div class="content" v-if="currentEditingArticle">
+          <vue-editor v-model="currentEditingArticle.content"
+                      useCustomImageHandler
+                      @image-added="handleImageAdded">
+          </vue-editor>
+          <button>Update article</button>
+        </div>
+      </div>
+
+
 
     </div>
 </template>
@@ -69,8 +81,11 @@
         @Action(actionStringWork.POST_WORK) postWork: ((work: IWork) => Promise<void>) | undefined;
         @Getter(getterStringWork.WORK) work: IWork[] | undefined;
         @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
+        @Action(actionStringWork.GET_WORK_BY_ID) getWorkById: ((workId: string) => Promise<IWork>) | undefined;
 
-        // work:IWork[] = [];
+
+
+      // work:IWork[] = [];
         loading:boolean = false;
         $router: any;
         isShowingWorkForm:boolean = false;
@@ -85,8 +100,9 @@
         selectedCategory:Category = Category.all;
         // localCategory:Category[] = category;
         selectedCategoryFilter:Category = Category.blank;
-
+        isEditingArticle:boolean = false;
         previewIngressImageUrl:string = "";
+        currentEditingArticle:IWork | null = null;
 
 
         get selectedFilter():string{
@@ -97,6 +113,18 @@
             }
 
             return this.selectedCategoryFilter;
+        }
+
+        async editArticle(workId:string):Promise<void>{
+            this.isEditingArticle = true;
+
+            if(this.getWorkById){
+              let editingArticle = await this.getWorkById(workId);
+              this.currentEditingArticle = editingArticle;
+              console.log("Article to edit", editingArticle);
+            }
+
+
         }
 
         async onUploadIngress():Promise<any>{
@@ -138,7 +166,11 @@
             console.log(event);
             this.selectedIngressFile = event.target.files[0];
             let filename = event.target.files[0].name;
+            let date = new Date();
+            date.toDateString();
+            //Adding the date to get uniq name on photos.
             this.selectedIngressFileName = filename;
+            this.selectedIngressFileName = this.selectedIngressFileName + date;
             if(filename.lastIndexOf('.')<= 0){
                 return alert("please add a valid file");
             }
@@ -149,6 +181,8 @@
             fileReader.readAsDataURL(event.target.files[0]);
             this.previewIngressImageUrl = event.target.files[0]
         }
+
+
 
 
         async addWork():Promise<void>{

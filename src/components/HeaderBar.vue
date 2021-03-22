@@ -3,10 +3,10 @@
         <div class="wrapper">
             <div>Mia habib productions</div>
             <nav>
-                <p>About</p>
-                <p>Works</p>
-                <p>Contact</p>
-                <p @click="openMenu">More</p>
+                <p class="not-menu">About</p>
+                <p class="not-menu">Works</p>
+                <p class="not-menu">Contact</p>
+                <p @click="openMenu"> <HamburgerMenu></HamburgerMenu>More</p>
             </nav>
         </div>
 
@@ -17,9 +17,11 @@
     import {Component, Prop, Vue} from 'vue-property-decorator';
     import {Getter, Mutation} from "vuex-class";
     import {getterStringMenuModal, mutationStringMenuModal} from "@/store/menuModal";
+    import HamburgerMenu from "@/components/HamburgerMenu.vue";
 
     @Component({
         components: {
+          HamburgerMenu
 
         },
     })
@@ -49,7 +51,11 @@
 
 <style lang="scss" scoped>
 
-
+@media only screen and (max-width: 800px) {
+  .not-menu{
+    display: none;
+  }
+}
 
     .dark{
         background:#333;
@@ -61,6 +67,9 @@
         margin: 0 auto;
         height: 30px;
         font-size: 20px;
+      p{
+        cursor: pointer;
+      }
     }
 
     header{

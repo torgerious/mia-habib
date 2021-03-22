@@ -15,9 +15,11 @@ export interface IWork{
 }
 
 export enum Category {
-    HowToDie = "how to die",
-    mono = "mono",
     all = "all topics",
+    performances = "performances",
+    projects = "projects",
+    publications = "publications",
+    films = "films",
     blank = "",
 }
 
