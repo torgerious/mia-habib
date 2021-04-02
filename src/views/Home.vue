@@ -13,9 +13,13 @@
 
     </div>
     <br>
-
+    <div class="work-header">
+      <h2>My work</h2>
+      <div class="line"></div>
+    </div>
     <loader v-if="loading"></loader>
     <div  v-else class="home--content">
+
       <article v-for="(work, i) in workList" :key="i + 'name'">
         <div>
           <img :src="work.imageIngressUrl" alt="image">
@@ -106,6 +110,21 @@ export default class Home extends Vue {
 
 .btn-wrapper{
   width: 100%;
+}
+
+.work-header{
+  margin-top: 68px;
+  display: block;
+  font-weight: bold;
+  font-size: 31px;
+  .line{
+    height: 4px;
+    width: 65px;
+    background: #373b44;
+    text-align: center;
+    margin: -23px auto 20px auto;
+    border-radius: 13px;
+  }
 }
 
   .home{

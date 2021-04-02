@@ -1,18 +1,42 @@
 <template>
     <footer>
         <div class="content">
+          <div class="left">
             <h2>Mia habib productions</h2>
-            <hr>
+            <p>Mia Haugland Habib | Artistic Director & choreographer</p>
+            <div class="line"></div>
+          </div>
+
+          <div class="right">
+
+            <facebook-icon></facebook-icon>
+            <instagram-icon></instagram-icon>
+          </div>
 
         </div>
+      <div class="contact">
+        <p>
+          miahabib@gmail.com<br>
+          +47 90 16 88 82
+        </p>
+        <p>
+          Grethe Henden| Producer and general manager for Mia Habib Productions<br>
+          +47 95 24 57 47
+        </p>
+      </div>
+      <div class="copyright">
+        <p> <i>&#xa9;miahabib | 2021 </i></p>
+      </div>
     </footer>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
+    import FacebookIcon from "@/components/facebookIcon.vue";
+    import InstagramIcon from "@/components/instagramIcon.vue";
 
     @Component({
-        components: {},
+        components: {InstagramIcon, FacebookIcon},
     })
 
     export default class FooterMain extends Vue {
@@ -33,6 +57,51 @@
             display: flex;
             max-width: 1100px;
             justify-content: center;
+            padding: 20px 0;
+            .left{
+              text-align: left;
+              width:50%;
+              h2{
+                font-size: 40px;
+              }
+              p{
+                font-size: 20px;
+                margin: -27px 0 0 0;
+              }
+              .line{
+                width:40px;
+                height: 3px;
+                border-radius: 2px;
+                background:#eeb1a6;
+              }
+            }
+            .right{
+              width:50%;
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+            }
+        }
+        .contact{
+          text-align: left;
+          display: block;
+          max-width: 1100px;
+          justify-content: center;
+          padding: 20px 0;
+          margin: 0 auto;
+          //border-top: 2px solid #f0f0f0;
+        }
+        .copyright{
+          width: 100%;
+          text-align: center;
+          background: #efefef;
+          height: 40px;
+          display: block;
+          color: #333;
+          font-weight: bold;
+          p{
+            padding: 10px 0;
+          }
         }
     }
 </style>

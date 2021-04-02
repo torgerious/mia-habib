@@ -7,6 +7,7 @@ export interface WorkState {
     work:IWork[] | null
 }
 export interface IWork{
+    id?:string,
     imageUrl:string,
     title:string,
     category:Category,
@@ -31,7 +32,7 @@ export const enum mutationStringWork{
 export const enum actionStringWork{
     GET_WORK = 'getWork',
     POST_WORK = 'postWork',
-    UPDATE_WORK = 'updateUser',
+    UPDATE_WORK = 'updateWork',
     GET_WORK_BY_ID = 'getWorkById'
 }
 export const enum getterStringWork{
@@ -61,8 +62,10 @@ export const actions: ActionTree<WorkState, any> = {
             DB.collection("work").get().then((doc) => {
                 doc.forEach(res => {
                     let work: Partial<IWork> = res.data();
-                    console.log("data", res.data());
-                    let newContact = {imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
+                    console.log("data",work);
+                    console.log("res",res.id);
+
+                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
                     workList.push(newContact as IWork);
                 });
 
@@ -90,6 +93,7 @@ export const actions: ActionTree<WorkState, any> = {
 
 
                     let newWork = {
+                        id:res.id,
                         imageUrl:work.imageUrl,
                         title:work.title,
                         category:work.category,
@@ -130,33 +134,29 @@ export const actions: ActionTree<WorkState, any> = {
         })
     },
 
-    // postUser({commit}, newUser: IUser): void {
-    //     DB.collection("users").doc(newUser.userId).set({
-    //         name: newUser.name,
-    //         email: newUser.email,
-    //         userId:newUser.userId,
-    //     }).then((res: any) => {
-    //         console.log("res", res);
-    //     }).catch((err: any) => {
-    //         console.log(err);
-    //     })
-    // },
-    // updateUser({commit, state, dispatch}, payload:IUser):Promise<IUser>{
-    //     console.log("payload inside", payload);
-    //     return new Promise((resolve, reject) => {
-    //
-    //         let userID = localStorage.getItem('userId');
-    //
-    //         DB.collection("users").doc(userID as string).set(payload, { merge: true }).then(function(doc:any){
-    //             console.log("RES pushed to state", payload);
-    //             dispatch(actionStringUser.GET_USER);
-    //             resolve(payload);
-    //         }).catch((err:any)=>{
-    //             console.log(err);
-    //             reject(err);
-    //         })
-    //     })
-    // },
+
+    updateWork({commit, state, dispatch}, payload:IWork):Promise<IWork>{
+        console.log("payload inside", payload);
+        return new Promise((resolve, reject) => {
+
+            DB.collection("work").doc(payload.id as string).set({
+                imageUrl:payload.imageUrl,
+                title:payload.title,
+                category:payload.category,
+                content:payload.content,
+                imageIngressUrl:payload.imageIngressUrl,
+                },
+                { merge: true }).then(function(doc:any){
+                console.log("RES pushed to state", payload);
+                console.log("RES pushed to state", doc);
+                dispatch(actionStringWork.GET_WORK);
+                resolve(payload);
+            }).catch((err:any)=>{
+                console.log(err);
+                reject(err);
+            })
+        })
+    },
 };
 
 export const work = {

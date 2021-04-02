@@ -1,11 +1,11 @@
 <template>
     <header :class="{'dark' : hasBackground}">
         <div class="wrapper">
-            <div>Mia habib productions</div>
+            <div class="logo" @click="navigate('/')">Mia habib productions</div>
             <nav>
-                <p class="not-menu">About</p>
-                <p class="not-menu">Works</p>
-                <p class="not-menu">Contact</p>
+                <p class="not-menu" @click="navigate('about')">About</p>
+                <p class="not-menu" @click="navigate('work')">Work</p>
+                <p class="not-menu" @click="navigate('contact')">Contact</p>
                 <p @click="openMenu"> <HamburgerMenu></HamburgerMenu>More</p>
             </nav>
         </div>
@@ -41,7 +41,13 @@
             }
         }
 
+      navigate(path:string):void{
+        this.$router.push(path);
+      }
+
         created():void{
+
+
 
             console.log("header")
         }
@@ -68,6 +74,9 @@
         height: 30px;
         font-size: 20px;
       p{
+        cursor: pointer;
+      }
+      .logo{
         cursor: pointer;
       }
     }

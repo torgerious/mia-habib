@@ -64,7 +64,7 @@
                 margin: 20vh auto;
                 height: 400px;
                 background: white;
-                box-shadow: 1px 1px 16px 8px #232323;
+                box-shadow: 1px 1px 16px 8px #2323233d;
                 padding: 11px 0px;
                 border-radius: 5px;
                 p{

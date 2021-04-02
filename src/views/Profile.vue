@@ -48,13 +48,30 @@
             </article>
         </div>
 
+
+
+    <!-- EDITING WORK ARTICLE -->
       <div v-if="isEditingArticle" class="add-wrapper">
         <div class="content" v-if="currentEditingArticle">
-          <vue-editor v-model="currentEditingArticle.content"
-                      useCustomImageHandler
-                      @image-added="handleImageAdded">
-          </vue-editor>
-          <button>Update article</button>
+          <button class="exit" @click="isEditingArticle = false">Exit</button>
+
+          <button class="delete" @click="deleteArticle"><span>🗑</span> Delete article</button>
+
+          <p>Tittel</p>
+          <input type="text" placeholder="title" v-model="currentEditingArticle.title">
+
+          <p>Kattegori</p>
+          <select v-model="currentEditingArticle.category">
+            <option v-for="(cate, i) in localCategory" :key="i">{{cate}}</option>
+          </select>
+
+          <div class="editor-wrapper">
+            <vue-editor v-model="currentEditingArticle.content"
+                        useCustomImageHandler
+                        @image-added="handleImageAdded">
+            </vue-editor>
+          </div>
+          <button @click="updateArticle(currentEditingArticle)">Update article</button>
         </div>
       </div>
 
@@ -82,7 +99,7 @@
         @Getter(getterStringWork.WORK) work: IWork[] | undefined;
         @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
         @Action(actionStringWork.GET_WORK_BY_ID) getWorkById: ((workId: string) => Promise<IWork>) | undefined;
-
+        @Action(actionStringWork.UPDATE_WORK) updateWork: ((work:IWork) => Promise<IWork>) | undefined
 
 
       // work:IWork[] = [];
@@ -103,6 +120,15 @@
         isEditingArticle:boolean = false;
         previewIngressImageUrl:string = "";
         currentEditingArticle:IWork | null = null;
+
+      async updateArticle(article:IWork):Promise<void>{
+        console.log("updated art", article);
+
+        if(this.updateWork){
+          let updateWork = await this.updateWork(article);
+          console.log("updatedWork?", updateWork);
+        }
+      }
 
 
         get selectedFilter():string{
@@ -251,6 +277,16 @@
 
         }
 
+        deleteArticle():void{
+          let txt;
+          let deleteChoice = confirm("Are you sure you want to delete this article?");
+          if (deleteChoice) {
+            txt = "You pressed OK!";
+          } else {
+            txt = "You pressed Cancel!";
+          }
+        }
+
 
         created(): void {
             firebase.auth().onAuthStateChanged((user) => {
@@ -285,6 +321,32 @@
 </script>
 
 <style lang="scss" scoped>
+
+  .delete{
+    float: right;
+    margin: 0 10px;
+    padding: 9px 12px;
+    background: #ffcac0;
+    border-radius: 5px;
+    color: #a24747;
+    font-weight: bold;
+    border: 2px solid #eeb1a6;
+    cursor: pointer;
+    span{
+      font-weight: 24px;
+    }
+  }
+  .exit{
+    float: right;
+    margin: 0 80px 0 0;
+    padding: 9px 12px;
+    background: #333;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 2px solid #333;
+    cursor: pointer;
+    color:white;
+  }
 
   .add-wrapper{
     width: 100%;
