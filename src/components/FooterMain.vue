@@ -1,31 +1,31 @@
 <template>
     <footer>
-        <div class="content">
-          <div class="left">
-            <h2>Mia habib productions</h2>
-            <p>Mia Haugland Habib | Artistic Director & choreographer</p>
-            <div class="line"></div>
-          </div>
+<!--        <div class="content">-->
+<!--          <div class="left">-->
+<!--            <h2>Mia habib productions</h2>-->
+<!--            <p>Mia Haugland Habib | Artistic Director & choreographer</p>-->
+<!--            <div class="line"></div>-->
+<!--          </div>-->
 
-          <div class="right">
+<!--          <div class="right">-->
 
-            <facebook-icon></facebook-icon>
-            <instagram-icon></instagram-icon>
-          </div>
+<!--            <facebook-icon></facebook-icon>-->
+<!--            <instagram-icon></instagram-icon>-->
+<!--          </div>-->
 
-        </div>
-      <div class="contact">
-        <p>
-          miahabib@gmail.com<br>
-          +47 90 16 88 82
-        </p>
-        <p>
-          Grethe Henden| Producer and general manager for Mia Habib Productions<br>
-          +47 95 24 57 47
-        </p>
-      </div>
+<!--        </div>-->
+<!--      <div class="contact">-->
+<!--        <p>-->
+<!--          miahabib@gmail.com<br>-->
+<!--          +47 90 16 88 82-->
+<!--        </p>-->
+<!--        <p>-->
+<!--          Grethe Henden| Producer and general manager for Mia Habib Productions<br>-->
+<!--          +47 95 24 57 47-->
+<!--        </p>-->
+<!--      </div>-->
       <div class="copyright">
-        <p> <i>&#xa9;miahabib | 2021 </i></p>
+        <p> <i>&#xa9;miahabib 2021 - <span @click="contact" class="contact">contact</span></i></p>
       </div>
     </footer>
 </template>
@@ -43,16 +43,19 @@
         created(): void {
 
         }
+      contact():void{
+          this.$router.push("/contact");
+      }
     }
 
 </script>
 
 <style lang="scss" scoped>
     footer{
-        background: #fafafa;
+        //background: #fafafa;
         color:#333;
         width: 100%;
-        height: 400px;
+        //height: 400px;
         .content{
             display: flex;
             max-width: 1100px;
@@ -95,12 +98,20 @@
           width: 100%;
           text-align: center;
           background: #efefef;
-          height: 40px;
-          display: block;
+          height: 44px;
+          //display: block;
+          position: relative;
+          display: inline-block;
           color: #333;
           font-weight: bold;
+          bottom: 0;
           p{
-            padding: 10px 0;
+            padding: 0px 0;
+          }
+          span{
+            text-decoration: underline;
+            display: contents;
+            cursor: pointer;
           }
         }
     }

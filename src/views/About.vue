@@ -143,18 +143,18 @@ export default class About extends Vue {
     }
     width: 20%;
     margin: 0 auto;
-    background: #1c1c1c;
+    background: #fff;
     padding: 32px;
     border-bottom-left-radius: 67px;
     border-bottom-right-radius: 182px;
     border-top-left-radius: 102px;
     max-height: 304px;
-    img{
-      border-bottom-left-radius: 67px;
-      border-bottom-right-radius: 182px;
-      border-top-left-radius: 102px;
-      box-shadow: -12px 11px 20px 20px #000;
-    }
+    //img{
+    //  border-bottom-left-radius: 67px;
+    //  border-bottom-right-radius: 182px;
+    //  border-top-left-radius: 102px;
+    //  box-shadow: -12px 11px 20px 20px #000;
+    //}
   }
 }
 

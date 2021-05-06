@@ -2,15 +2,15 @@
   <div class="home">
     <div class="home--main" :style="{ 'background-image': 'url(' + backgroundImages[backgroundImageIndex] + ')' }">
       <header-bar></header-bar>
-      <div class="prev"  @click="prevImage">&#10094;</div>
-      <div class="next"  @click="nextImage">&#10095;</div>
+<!--      <div class="prev"  @click="prevImage">&#10094;</div>-->
+<!--      <div class="next"  @click="nextImage">&#10095;</div>-->
 
 <!--      <div class="image-indicator">-->
 <!--        <div v-for="(item, i) in backgroundImages" :key="i">-->
 <!--          <span v-if="i === backgroundImageIndex"></span>-->
 <!--        </div>-->
 <!--      </div>-->
-
+      <p class="project-link" @click="navigateProject">{{currentProjectLink}}</p>
     </div>
     <br>
     <div class="work-header">
@@ -24,7 +24,7 @@
         <div>
           <img :src="work.imageIngressUrl" alt="image">
         </div>
-        <p>{{work.title}}</p>
+        <p @click="navigate">{{work.title}}</p>
       </article>
 
     <div class="btn-wrapper">
@@ -60,6 +60,10 @@ interface IArticle{
 
 export default class Home extends Vue {
   workList:IWork[] = [];
+  projectLinks:Array<string> = ["How to die", "Something random", "Another random"];
+  projectLinksURL:Array<string> = ["/article/This-is-a-test-to-see", "/article/Dette-er-en-ny-artikkel", "Another random"];
+  currentProjectLink:string = this.projectLinks[0];
+  currentProjectLinkURL:string = this.projectLinksURL[0];
 
   backgroundImages:Array<string> = ["mia-habib.jpeg", "mia-4.jpg", "mia-6.jpg"];
   backgroundImageIndex:number = 0;
@@ -69,13 +73,24 @@ export default class Home extends Vue {
 
 
   nextImage():void{
-    if(this.backgroundImageIndex === this.backgroundImages.length-1){
-      this.backgroundImageIndex = 0;
-    }else {
-    this.backgroundImageIndex = this.backgroundImageIndex +1;
-    }
+    setInterval(() => {
+      if(this.backgroundImageIndex === this.backgroundImages.length-1){
+        this.backgroundImageIndex = 0;
+        this.currentProjectLink = this.projectLinks[this.backgroundImageIndex];
+        this.currentProjectLinkURL = this.projectLinksURL[this.backgroundImageIndex];
 
+      }else {
+      this.backgroundImageIndex = this.backgroundImageIndex +1;
+      this.currentProjectLink = this.projectLinks[this.backgroundImageIndex]
+      this.currentProjectLinkURL = this.projectLinksURL[this.backgroundImageIndex];
+
+      }
+    }, 5000);
   }
+  navigateProject():void{
+    this.$router.push(this.currentProjectLinkURL);
+  }
+
   prevImage():void{
     if(this.backgroundImageIndex === 0){
       this.backgroundImageIndex = this.backgroundImages.length -1;
@@ -87,6 +102,7 @@ export default class Home extends Vue {
   navigate(route:string):void{
     this.$router.push(route);
   }
+
 
   created():void{
     if(this.getWork){
@@ -100,6 +116,8 @@ export default class Home extends Vue {
         this.loading = false;
       })
     }
+
+    this.nextImage();
   }
 
 }
@@ -107,6 +125,17 @@ export default class Home extends Vue {
 
 <style lang="scss" scoped>
 
+.project-link{
+  bottom: 6px;
+  position: absolute;
+  color: white;
+  text-decoration: underline;
+  right: 33px;
+  font-size: 19px;
+  font-style: oblique;
+  text-shadow: 15px 6px 20px #000000fc;
+  cursor: pointer;
+}
 
 .btn-wrapper{
   width: 100%;
@@ -242,6 +271,7 @@ export default class Home extends Vue {
         height: auto;
         margin: 5px 1%;
         text-align: left;
+        cursor: pointer;
         @media screen and (max-width: 800px) {
           width: 100%;
           margin: 0;
