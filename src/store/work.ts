@@ -21,6 +21,9 @@ export enum Category {
     projects = "projects",
     publications = "publications",
     films = "films",
+    interview = "interview",
+    media = "media",
+    reviews = "reviews",
     blank = "",
 }
 

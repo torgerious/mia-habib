@@ -1,32 +1,35 @@
 <template>
     <footer>
-<!--        <div class="content">-->
-<!--          <div class="left">-->
-<!--            <h2>Mia habib productions</h2>-->
-<!--            <p>Mia Haugland Habib | Artistic Director & choreographer</p>-->
-<!--            <div class="line"></div>-->
-<!--          </div>-->
+        <div class="content">
+          <div class="left">
+            <h2>Mia habib productions</h2>
+            <p>Mia Haugland Habib | Artistic Director & choreographer</p>
+            <div class="line"></div>
+            <br>
+            <img src="about-mia.jpg" alt="mia" >
 
-<!--          <div class="right">-->
+          </div>
 
-<!--            <facebook-icon></facebook-icon>-->
-<!--            <instagram-icon></instagram-icon>-->
-<!--          </div>-->
+          <div class="right">
 
-<!--        </div>-->
-<!--      <div class="contact">-->
-<!--        <p>-->
-<!--          miahabib@gmail.com<br>-->
-<!--          +47 90 16 88 82-->
-<!--        </p>-->
-<!--        <p>-->
-<!--          Grethe Henden| Producer and general manager for Mia Habib Productions<br>-->
-<!--          +47 95 24 57 47-->
-<!--        </p>-->
-<!--      </div>-->
-      <div class="copyright">
-        <p> <i>&#xa9;miahabib 2021 - <span @click="contact" class="contact">contact</span></i></p>
+            <facebook-icon></facebook-icon>
+            <instagram-icon></instagram-icon>
+          </div>
+
+        </div>
+      <div class="contact">
+        <p>
+          miahabib@gmail.com<br>
+          +47 90 16 88 82
+        </p>
+        <p>
+          Grethe Henden| Producer and general manager for Mia Habib Productions<br>
+          +47 95 24 57 47
+        </p>
       </div>
+<!--      <div class="copyright">-->
+<!--        <p> <i>&#xa9;miahabib 2021 - <span @click="contact" class="contact">contact</span></i></p>-->
+<!--      </div>-->
     </footer>
 </template>
 

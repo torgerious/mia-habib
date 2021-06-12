@@ -24,6 +24,7 @@
             </div>
 
         </div>
+      <footer-bar></footer-bar>
     </div>
 </template>
 
@@ -32,12 +33,13 @@
     import HeaderBar from "@/components/HeaderBar.vue";
     import {actionStringWork, Category, IWork} from "@/store/work";
     import {Action} from "vuex-class";
-    import {category} from "@/Types/Types";
+    import {category, workCategory} from "@/Types/Types";
     import Loader from "@/components/loader.vue";
+    import FooterBar from "@/components/FooterBar.vue";
 
 
     @Component({
-        components: {Loader, HeaderBar},
+        components: {FooterBar, Loader, HeaderBar},
     })
 
     export default class Work extends Vue {
@@ -45,7 +47,7 @@
 
         work:IWork[] = [];
         selectedCategory:Category = Category.all;
-        localCategory:Category[] = category;
+        localCategory:Category[] = workCategory;
         selectedCategoryFilter:Category = Category.blank;
         loading:boolean = false;
 
@@ -162,8 +164,10 @@
 
 
     .category{
-        background: #ffffff;
-        padding: 5px 10px;
+        background: #f2f2f2;
+        padding: 13px 10px;
+        font-weight: bold;
+
         color: #333333;
         display: inline-flex;
         /*margin: 0 10px;*/

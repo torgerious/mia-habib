@@ -3,9 +3,13 @@
         <div class="wrapper">
             <div class="logo" @click="navigate('/')">Mia habib productions</div>
             <nav>
-                <p class="not-menu" @click="navigate('about')">About</p>
-                <p class="not-menu" @click="navigate('work')">Work</p>
-                <p class="not-menu" @click="navigate('contact')">Contact</p>
+<!--                <p class="not-menu" @click="navigate('about')">About</p>-->
+                <router-link tag="p" to="/about" exact >About</router-link>
+                <router-link tag="p" to="/work" exact >Work</router-link>
+                <router-link tag="p" to="/contact" exact >Contact</router-link>
+
+<!--              <p class="not-menu" @click="navigate('work')">Work</p>-->
+<!--                <p class="not-menu" @click="navigate('contact')">Contact</p>-->
                 <p @click="openMenu"> <HamburgerMenu></HamburgerMenu>More</p>
             </nav>
         </div>
@@ -47,19 +51,26 @@
 
         created():void{
 
-
-
-            console.log("header")
         }
     }
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
+.router-link-exact-active  {
+  transition: 0.3s;
+  display: inline-block;
+  border-bottom: 1px solid white;
+  padding-bottom: 2px;
+}
 
 @media only screen and (max-width: 800px) {
+
+
   .not-menu{
     display: none;
+    transition: 0.3s;
+
   }
 }
 

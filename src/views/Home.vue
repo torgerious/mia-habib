@@ -32,7 +32,8 @@
     </div>
     </div>
     <div>
-    <footer-main></footer-main>
+<!--    <footer-main></footer-main>-->
+      <footer-bar></footer-bar>
     </div>
   </div>
 </template>
@@ -44,6 +45,7 @@ import {Action} from "vuex-class";
 import {actionStringWork, IWork} from "@/store/work";
 import Loader from "@/components/loader.vue";
 import FooterMain from "@/components/FooterMain.vue";
+import FooterBar from "@/components/FooterBar.vue";
 
 interface IArticle{
   imageUrl:string,
@@ -52,6 +54,7 @@ interface IArticle{
 
 @Component({
   components: {
+    FooterBar,
     FooterMain,
     Loader,
     HeaderBar

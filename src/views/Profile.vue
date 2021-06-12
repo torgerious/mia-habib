@@ -2,9 +2,15 @@
     <div>
         <h1>Admin panel</h1>
 
-        <button @click="isShowingWorkForm = true">Post ny artikkel</button>
+<!--      <button class="post-btn" @click="isShowingWorkForm = true">Artikkler</button>-->
+<!--      <button class="post-btn" @click="isShowingWorkForm = true">Kalender</button>-->
 
-        <div class="add-wrapper" v-if="isShowingWorkForm">
+      <button class="post-btn" :class="{activeTab: activeTab === 1}" @click="activeTab = 1"> Artikler</button>
+      <button class="post-btn" :class="{activeTab: activeTab === 2}" @click="activeTab = 2"> Kalender</button>
+      <button class="post-btn" :class="{activeTab: activeTab === 3}" @click="activeTab = 3"> Presenters</button>
+
+
+      <div class="add-wrapper" v-if="isShowingWorkForm">
           <div class="content">
             <h3>Opprett ny artikkel</h3>
             <span @click="isShowingWorkForm = false">Exit</span>
@@ -32,10 +38,41 @@
           </div>
         </div>
 
+
+      <div class="add-wrapper" v-if="isShowingCalendarForm">
+        <div class="content">
+          <h3>Opprett ny Kalender event</h3>
+          <span @click="isShowingCalendarForm = false">Exit</span>
+
+          <p>Tittel</p>
+          <input type="text" placeholder="title" v-model="calendarTitle">
+
+          <p>Dato</p>
+          <input type="date" v-model="calendarDate">
+
+          <p>Kalender event tekst</p>
+          <div class="editor-wrapper">
+            <vue-editor v-model="calendarText"
+                        useCustomImageHandler
+                        @image-added="handleImageAdded">
+            </vue-editor>
+          </div>
+          <button v-if="!loading" @click="addCalendarEvent">Post</button>
+          <p v-if="loading">uploading.. </p>
+        </div>
+      </div>
         <br>
         <loader v-if="loading"></loader>
-      <p>articles </p>
-      <div class="post-wrapper">
+
+      <div class="content-wrapper">
+
+        <!-- POSTS -->
+        <div class="list-header" v-if="activeTab === 1">
+          <button class="add" @click="isShowingWorkForm = true">legg til ny +</button>
+
+          <p v-if="activeTab === 1">Articles </p>
+      </div>
+      <div class="post-wrapper" v-if="activeTab === 1">
             <article
                     class="post"
                     v-for="(item, i) in work"
@@ -48,6 +85,25 @@
             </article>
         </div>
 
+
+        <!-- KALENDAR EVENTS -->
+        <div class="list-header" v-if="activeTab === 2">
+          <button class="add" @click="isShowingCalendarForm = true">legg til ny +</button>
+          <p >Calendar events </p>
+        </div>
+        <div class="post-wrapper" v-if="activeTab === 2">
+          <article
+              class="post"
+              v-for="(item, i) in calendarEvents">
+            <p class="calendar-date"><span>{{item.date}}</span></p>
+            <p>{{item.title}}</p>
+            <div v-html="item.text.substring(0,10)+'..'"></div>
+            <button @click="editArticle()">Edit</button>
+          </article>
+        </div>
+
+
+      </div>
 
 
     <!-- EDITING WORK ARTICLE -->
@@ -77,6 +133,7 @@
 
 
 
+
     </div>
 </template>
 
@@ -89,6 +146,7 @@
     import {STORAGE} from "@/main";
     import {Action, Getter} from "vuex-class";
     import Loader from "@/components/loader.vue";
+    import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
 
     @Component({
         components: {Loader, VueEditor},
@@ -99,7 +157,14 @@
         @Getter(getterStringWork.WORK) work: IWork[] | undefined;
         @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
         @Action(actionStringWork.GET_WORK_BY_ID) getWorkById: ((workId: string) => Promise<IWork>) | undefined;
-        @Action(actionStringWork.UPDATE_WORK) updateWork: ((work:IWork) => Promise<IWork>) | undefined
+        @Action(actionStringWork.UPDATE_WORK) updateWork: ((work:IWork) => Promise<IWork>) | undefined;
+        @Action(actionStringCalendarEvent.POST_CALENDAR_EVENT) postCalendarEvent: ((calendarEvent: ICalendarEvent) => Promise<void>) | undefined;
+        @Getter(getterStringCalendarEvent.CALENDAR_EVENTS) calendarEvents: IWork[] | undefined;
+        @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS) getCalendarEvents: (() => Promise<ICalendarEvent[]>) | undefined;
+
+
+
+
 
 
       // work:IWork[] = [];
@@ -120,6 +185,11 @@
         isEditingArticle:boolean = false;
         previewIngressImageUrl:string = "";
         currentEditingArticle:IWork | null = null;
+        activeTab:number | null = null;
+        isShowingCalendarForm:boolean = false;
+        calendarTitle:string = "";
+        calendarDate:string = "";
+        calendarText:any = null;
 
       async updateArticle(article:IWork):Promise<void>{
         console.log("updated art", article);
@@ -287,8 +357,21 @@
           }
         }
 
+      async addCalendarEvent():Promise<void>{
+        let calendarEventToBePosted:ICalendarEvent = {title:this.calendarTitle, date:this.calendarDate, text:this.calendarText};
+
+        let res = await this.postCalendarEvent(calendarEventToBePosted);
+        console.log("add calendar ev", this.calendarDate);
+        console.log("add calendar ev", this.calendarText);
+        console.log("add calendar ev", this.calendarTitle);
+        console.log(res);
+
+      }
 
         created(): void {
+
+            this.activeTab = 1;
+
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
                     // User is signed in, see docs for a list of available properties
@@ -314,6 +397,15 @@
                 })
             }
 
+            if(this.getCalendarEvents){
+              this.loading = true;
+              this.getCalendarEvents().then(res => {
+                this.loading = false;
+              }).catch(err => {
+                this.loading = false;
+              })
+            }
+
 
         }
     }
@@ -321,6 +413,36 @@
 </script>
 
 <style lang="scss" scoped>
+
+.add{
+  padding: 0 20px;
+  height: 35px;
+  margin: 7px 0;
+  background: #cbfff2;
+  color: #002b20;
+  border-radius: 5px;
+  border: 2px solid #87edd3;
+  font-weight: bold;
+}
+
+.list-header{
+  display: inline-flex;
+  width: 80%;
+  justify-content: space-between;
+}
+
+.post-btn{
+  margin: 0 5px;
+  padding: 9px 18px;
+  background: none;
+  border: none;
+  color: #004e2e;
+  font-weight: bold;
+  cursor: pointer;
+}
+.activeTab{
+  border-bottom: 2px solid #87edd3;
+}
 
   .delete{
     float: right;
@@ -376,6 +498,16 @@
         margin: 0px 10% 29px 10%;
       }
       input[type=text] {
+        width: 40%;
+        margin: 5px 50% 0% 10%;
+        height: 30px;
+        border-radius: 5px;
+        font-size: 15px;
+        text-indent: 5px;
+        color: #333;
+        border: 1px solid #333;
+      }
+      input[type=date] {
         width: 40%;
         margin: 5px 50% 0% 10%;
         height: 30px;
@@ -463,6 +595,9 @@
                 color: white;
                 padding: 2px 10px;
             }
+          .calendar-date{
+            width:200px;
+          }
             button{
                 padding: 0 20px;
                 height: 35px;

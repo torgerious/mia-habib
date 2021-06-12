@@ -1,235 +1,121 @@
 <template>
-    <footer class="site-footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <h6>About</h6>
-                    <p class="text-justify">Scanfcode.com <i>CODE WANTS TO BE SIMPLE </i> is an initiative  to help the upcoming programmers with the code. Scanfcode focuses on providing the most efficient code or snippets as the code wants to be simple. We will help programmers build up concepts in different programming languages that include C, C++, Java, HTML, CSS, Bootstrap, JavaScript, PHP, Android, SQL and Algorithm.</p>
-                </div>
+  <footer>
+<!--    <div class="content">-->
+<!--      <div class="left">-->
+<!--        <h2>Mia habib productions</h2>-->
+<!--        <p>Mia Haugland Habib | Artistic Director & choreographer</p>-->
+<!--        <div class="line"></div>-->
+<!--        <br>-->
+<!--        <img src="about-mia.jpg" alt="mia" >-->
 
-                <div class="col-xs-6 col-md-3">
-                    <h6>Categories</h6>
-                    <ul class="footer-links">
-                        <li><a href="http://scanfcode.com/category/c-language/">C</a></li>
-                        <li><a href="http://scanfcode.com/category/front-end-development/">UI Design</a></li>
-                        <li><a href="http://scanfcode.com/category/back-end-development/">PHP</a></li>
-                        <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
-                        <li><a href="http://scanfcode.com/category/android/">Android</a></li>
-                        <li><a href="http://scanfcode.com/category/templates/">Templates</a></li>
-                    </ul>
-                </div>
+<!--      </div>-->
 
-                <div class="col-xs-6 col-md-3">
-                    <h6>Quick Links</h6>
-                    <ul class="footer-links">
-                        <li><a href="http://scanfcode.com/about/">About Us</a></li>
-                        <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
-                        <li><a href="http://scanfcode.com/contribute-at-scanfcode/">Contribute</a></li>
-                        <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li>
-                        <li><a href="http://scanfcode.com/sitemap/">Sitemap</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-sm-6 col-xs-12">
-                    <p class="copyright-text">Copyright &copy; 2017 All Rights Reserved by
-                        <a href="#">Scanfcode</a>.
-                    </p>
-                </div>
+<!--      <div class="right">-->
 
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <ul class="social-icons">
-                        <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-                        <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
-                        <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
+<!--        <facebook-icon></facebook-icon>-->
+<!--        <instagram-icon></instagram-icon>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--    <div class="contact">-->
+<!--      <p>-->
+<!--        miahabib@gmail.com<br>-->
+<!--        +47 90 16 88 82-->
+<!--      </p>-->
+<!--      <p>-->
+<!--        Grethe Henden| Producer and general manager for Mia Habib Productions<br>-->
+<!--        +47 95 24 57 47-->
+<!--      </p>-->
+<!--    </div>-->
+          <div class="copyright">
+            <p> <i>&#xa9;miahabib 2021 - <span @click="contact" class="contact">contact</span></i></p>
+          </div>
+  </footer>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator';
+import FacebookIcon from "@/components/facebookIcon.vue";
+import InstagramIcon from "@/components/instagramIcon.vue";
 
-    @Component({
-        components: {},
-    })
+@Component({
+  components: {InstagramIcon, FacebookIcon},
+})
 
-    export default class FooterBar extends Vue {
-        created(): void {
+export default class FooterBar extends Vue {
+  created(): void {
 
-        }
-    }
+  }
+  contact():void{
+    this.$router.push("/contact");
+  }
+}
 
 </script>
 
 <style lang="scss" scoped>
-    .site-footer
-    {
-        background-color:#26272b;
-        padding:45px 0 20px;
-        font-size:15px;
-        line-height:24px;
-        color:#737373;
-    }
-    .site-footer hr
-    {
-        border-top-color:#bbb;
-        opacity:0.5
-    }
-    .site-footer hr.small
-    {
-        margin:20px 0
-    }
-    .site-footer h6
-    {
-        color:#fff;
-        font-size:16px;
-        text-transform:uppercase;
-        margin-top:5px;
-        letter-spacing:2px
-    }
-    .site-footer a
-    {
-        color:#737373;
-    }
-    .site-footer a:hover
-    {
-        color:#3366cc;
-        text-decoration:none;
-    }
-    .footer-links
-    {
-        padding-left:0;
-        list-style:none
-    }
-    .footer-links li
-    {
-        display:block
-    }
-    .footer-links a
-    {
-        color:#737373
-    }
-    .footer-links a:active,.footer-links a:focus,.footer-links a:hover
-    {
-        color:#3366cc;
-        text-decoration:none;
-    }
-    .footer-links.inline li
-    {
-        display:inline-block
-    }
-    .site-footer .social-icons
-    {
-        text-align:right
-    }
-    .site-footer .social-icons a
-    {
+footer{
+  //background: #fafafa;
+  color:#333;
+  width: 100%;
+  //height: 400px;
+  .content{
+    display: flex;
+    max-width: 1100px;
+    justify-content: center;
+    padding: 20px 0;
+    .left{
+      text-align: left;
+      width:50%;
+      h2{
+        font-size: 40px;
+      }
+      p{
+        font-size: 20px;
+        margin: -27px 0 0 0;
+      }
+      .line{
         width:40px;
-        height:40px;
-        line-height:40px;
-        margin-left:6px;
-        margin-right:0;
-        border-radius:100%;
-        background-color:#33353d
+        height: 3px;
+        border-radius: 2px;
+        background:#eeb1a6;
+      }
     }
-    .copyright-text
-    {
-        margin:0
+    .right{
+      width:50%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
     }
-    @media (max-width:991px)
-    {
-        .site-footer [class^=col-]
-        {
-            margin-bottom:30px
-        }
+  }
+  .contact{
+    text-align: left;
+    display: block;
+    max-width: 1100px;
+    justify-content: center;
+    padding: 20px 0;
+    margin: 0 auto;
+    //border-top: 2px solid #f0f0f0;
+  }
+  .copyright{
+    width: 100%;
+    text-align: center;
+    background: #efefef;
+    height: 44px;
+    //display: block;
+    position: relative;
+    display: inline-block;
+    color: #333;
+    font-weight: bold;
+    bottom: 0;
+    p{
+      padding: 0px 0;
     }
-    @media (max-width:767px)
-    {
-        .site-footer
-        {
-            padding-bottom:0
-        }
-        .site-footer .copyright-text,.site-footer .social-icons
-        {
-            text-align:center
-        }
+    span{
+      text-decoration: underline;
+      display: contents;
+      cursor: pointer;
     }
-    .social-icons
-    {
-        padding-left:0;
-        margin-bottom:0;
-        list-style:none
-    }
-    .social-icons li
-    {
-        display:inline-block;
-        margin-bottom:4px
-    }
-    .social-icons li.title
-    {
-        margin-right:15px;
-        text-transform:uppercase;
-        color:#96a2b2;
-        font-weight:700;
-        font-size:13px
-    }
-    .social-icons a{
-        background-color:#eceeef;
-        color:#818a91;
-        font-size:16px;
-        display:inline-block;
-        line-height:44px;
-        width:44px;
-        height:44px;
-        text-align:center;
-        margin-right:8px;
-        border-radius:100%;
-        -webkit-transition:all .2s linear;
-        -o-transition:all .2s linear;
-        transition:all .2s linear
-    }
-    .social-icons a:active,.social-icons a:focus,.social-icons a:hover
-    {
-        color:#fff;
-        background-color:#29aafe
-    }
-    .social-icons.size-sm a
-    {
-        line-height:34px;
-        height:34px;
-        width:34px;
-        font-size:14px
-    }
-    .social-icons a.facebook:hover
-    {
-        background-color:#3b5998
-    }
-    .social-icons a.twitter:hover
-    {
-        background-color:#00aced
-    }
-    .social-icons a.linkedin:hover
-    {
-        background-color:#007bb6
-    }
-    .social-icons a.dribbble:hover
-    {
-        background-color:#ea4c89
-    }
-    @media (max-width:767px)
-    {
-        .social-icons li.title
-        {
-            display:block;
-            margin-right:0;
-            font-weight:600
-        }
-    }
+  }
+}
 </style>
