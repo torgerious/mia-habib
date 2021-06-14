@@ -31,6 +31,7 @@
                 <p @click="navigate('press')">Press</p>
                 <p @click="navigate('calendar')">Calendar</p>
                 <p @click="navigate('people')">People</p>
+                <p @click="navigate('presenters')">Presenters</p>
 
             </nav>
         </div>
@@ -102,7 +103,7 @@
             &__content{
                 width: 300px;
                 margin-top: 58px;
-                height: 400px;
+                height: 430px;
                 background: white;
                 box-shadow: 1px 1px 16px 8px #2323233d;
                 padding: 11px 0px;
@@ -112,6 +113,7 @@
                     margin: 21px 10%;
                     font-weight: bold;
                     text-align: left;
+                    cursor: pointer;
                 }
                 &--header{
                     display: flex;

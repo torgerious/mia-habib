@@ -119,6 +119,8 @@ h1{
     }
     .main-text{
       margin-bottom: 40px;
+      padding: 0px 77px;
+      line-height: 26px;
     }
   }
 }

@@ -9,6 +9,7 @@ import Press from "@/views/Press.vue";
 import Calendar from "@/views/Calendar.vue";
 import Contact from "@/views/Contact.vue";
 import People from "@/views/People.vue";
+import Presenters from "@/views/Presenters.vue";
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,7 @@ const routes: Array<RouteConfig> = [
   { path: '/calendar', name: 'calendar', component: Calendar},
   { path: '/contact', name: 'contact', component: Contact},
   { path: '/people', name: 'people', component: People},
+  { path: '/presenters', name: 'presenters', component: Presenters},
 
   {path: '/about', name: 'About' ,
     // route level code-splitting

@@ -1,6 +1,12 @@
 <template>
   <div>
     <header-bar :hasBackground="true"></header-bar>
+    <div class="wrapper">
+      <div class="bread-crumbs">
+        <router-link tag="span" to="/"> Home</router-link> /
+        <router-link tag="span" to="/Calendar" class="active-link"> Calendar</router-link>
+      </div>
+    </div>
     <h1>Calendar</h1>
     <p>My upcoming events</p>
     <div class="calendar">
@@ -66,6 +72,21 @@ export default class Article extends Vue {
 </script>
 <style lang="scss" scoped>
 
+.bread-crumbs{
+  left: 0;
+  width: 109px;
+  display: flex;
+  margin: 20px 0px;
+  justify-content: space-between;
+  span{
+    cursor: pointer;
+    font-weight: bold;
+
+    &:hover{
+      text-decoration: underline;
+    }
+  }
+}
 
 .calendar{
   margin:100px 0;

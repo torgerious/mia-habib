@@ -47,7 +47,7 @@
 
 
     </div>
-    <footer-main></footer-main>
+    <footer-bar></footer-bar>
   </div>
 </template>
 

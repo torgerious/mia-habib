@@ -415,6 +415,7 @@
 <style lang="scss" scoped>
 
 .add{
+  cursor: pointer;
   padding: 0 20px;
   height: 35px;
   margin: 7px 0;
