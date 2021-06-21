@@ -53,6 +53,7 @@
           <p>Kalender event tekst</p>
           <div class="editor-wrapper">
             <vue-editor v-model="calendarText"
+                        :editor-toolbar="mediaToolBar"
                         useCustomImageHandler
                         @image-added="handleImageAdded">
             </vue-editor>
@@ -98,7 +99,7 @@
             <p class="calendar-date"><span>{{item.date}}</span></p>
             <p>{{item.title}}</p>
             <div v-html="item.text.substring(0,10)+'..'"></div>
-            <button @click="editArticle()">Edit</button>
+            <button @click="editCalendarEvent(item.id)">Edit</button>
           </article>
         </div>
 
@@ -131,7 +132,28 @@
         </div>
       </div>
 
+    <!-- EDITING CALENDAR EVENT -->
+      <div v-if="isEditingEvent" class="add-wrapper">
+        <div class="content" v-if="currentEditingArticle">
+          <button class="exit" @click="isEditingEvent = false">Exit</button>
 
+          <button class="delete" @click="deleteArticle"><span>🗑</span> Delete article</button>
+
+          <p>Tittel</p>
+          <input type="text" placeholder="title" v-model="currentEditingCalendarEvent.title">
+
+          <p>Kattegori</p>
+          <input type="date" v-model="currentEditingCalendarEvent.date">
+
+          <div class="editor-wrapper">
+            <vue-editor v-model="currentEditingCalendarEvent.text"
+                        useCustomImageHandler
+                        @image-added="handleImageAdded">
+            </vue-editor>
+          </div>
+          <button @click="updateArticle(currentEditingArticle)">Update article</button>
+        </div>
+      </div>
 
 
     </div>
@@ -141,7 +163,7 @@
     import {Component, Vue} from 'vue-property-decorator';
     import firebase from 'firebase';
     import {actionStringWork, Category, getterStringWork, IWork} from "@/store/work";
-    import {category} from "@/Types/Types";
+    import {category, noMediaToolbar} from "@/Types/Types";
     import { VueEditor } from "vue2-editor";
     import {STORAGE} from "@/main";
     import {Action, Getter} from "vuex-class";
@@ -161,6 +183,8 @@
         @Action(actionStringCalendarEvent.POST_CALENDAR_EVENT) postCalendarEvent: ((calendarEvent: ICalendarEvent) => Promise<void>) | undefined;
         @Getter(getterStringCalendarEvent.CALENDAR_EVENTS) calendarEvents: IWork[] | undefined;
         @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS) getCalendarEvents: (() => Promise<ICalendarEvent[]>) | undefined;
+        @Action(actionStringCalendarEvent.UPDATE_CALENDAR_EVENT) updateCalendarEvent:((calendar:ICalendarEvent) => Promise<ICalendarEvent>) | undefined;
+
 
 
 
@@ -168,6 +192,7 @@
 
 
       // work:IWork[] = [];
+        mediaToolBar:Array<any> = noMediaToolbar;
         loading:boolean = false;
         $router: any;
         isShowingWorkForm:boolean = false;
@@ -190,6 +215,9 @@
         calendarTitle:string = "";
         calendarDate:string = "";
         calendarText:any = null;
+        isEditingEvent:boolean = false;
+        currentEditingCalendarEvent:ICalendarEvent | null = null;
+
 
       async updateArticle(article:IWork):Promise<void>{
         console.log("updated art", article);
@@ -219,9 +247,18 @@
               this.currentEditingArticle = editingArticle;
               console.log("Article to edit", editingArticle);
             }
-
-
         }
+
+      async editCalendarEvent(eventId:string):Promise<void>{
+        console.log("ID", eventId);
+        this.isEditingEvent = true;
+
+        // if(this.getWorkById){
+        //   let editingCalendar = await this.getWorkById(eventId);
+        //   this.currentEditingCalendarEvent = editingCalendar;
+        //   console.log("Article to edit", editingCalendar);
+        // }
+      }
 
         async onUploadIngress():Promise<any>{
             // Create a root reference

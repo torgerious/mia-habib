@@ -3,6 +3,7 @@ import {DB} from '@/main';
 import {formatDate, FormatSpaceType} from "@/Types/formatDateHelper";
 import firebase from "firebase";
 import Timestamp = firebase.firestore.Timestamp;
+import {actionStringWork} from "@/store/work";
 
 
 export interface CalendarEventState {
@@ -23,7 +24,9 @@ export const enum mutationStringCalendarEvent{
 
 export const enum actionStringCalendarEvent{
     POST_CALENDAR_EVENT = 'postCalendarEvent',
-    GET_CALENDAR_EVENTS = 'getCalendarEvents'
+    GET_CALENDAR_EVENTS = 'getCalendarEvents',
+    UPDATE_CALENDAR_EVENT = 'updateCalendarEvent'
+
 }
 export const enum getterStringCalendarEvent{
     CALENDAR_EVENTS = 'calendarEvents'
@@ -98,6 +101,26 @@ export const actions: ActionTree<CalendarEventState, any> = {
         })
     },
 
+    updateCalendarEvent({commit, dispatch}, payload:Partial<ICalendarEvent>): Promise<ICalendarEvent> {
+
+        return new Promise((resolve, reject) => {
+
+            DB.collection("calendarEvent").doc(payload.id as string).set({
+                    title:payload.title,
+                    text:payload.text,
+                    date:payload.date,
+                },
+                { merge: true }).then(function(doc:any){
+                console.log("RES pushed to state", payload);
+                console.log("RES pushed to state", doc);
+                dispatch(actionStringCalendarEvent.GET_CALENDAR_EVENTS);
+                resolve(payload as ICalendarEvent);
+            }).catch((err:any)=>{
+                console.log(err);
+                reject(err);
+            })
+        })
+    },
 
 };
 

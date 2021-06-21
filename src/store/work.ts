@@ -34,6 +34,7 @@ export const enum mutationStringWork{
 }
 export const enum actionStringWork{
     GET_WORK = 'getWork',
+    GET_LATEST_WORK = 'getLatestWork',
     POST_WORK = 'postWork',
     UPDATE_WORK = 'updateWork',
     GET_WORK_BY_ID = 'getWorkById'
@@ -67,6 +68,34 @@ export const actions: ActionTree<WorkState, any> = {
                     let work: Partial<IWork> = res.data();
                     console.log("data",work);
                     console.log("res",res.id);
+
+                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
+                    workList.push(newContact as IWork);
+                });
+
+                commit(mutationStringWork.SET_WORK, workList);
+                resolve(workList);
+
+            }).catch((err) => {
+                reject(err);
+                reject("error");
+
+            });
+
+        });
+
+
+    },
+
+    getLatestWork({commit}): Promise<IWork[]> {
+        console.log("running get latest work");
+        return new Promise((resolve, reject) => {
+
+            let workList: IWork[] = [];
+
+            DB.collection("work").limit(6).get().then((doc) => {
+                doc.forEach(res => {
+                    let work: Partial<IWork> = res.data();
 
                     let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
                     workList.push(newContact as IWork);

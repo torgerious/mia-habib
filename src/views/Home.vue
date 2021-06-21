@@ -72,7 +72,7 @@ export default class Home extends Vue {
   backgroundImageIndex:number = 0;
   loading:boolean = false;
 
-  @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
+  @Action(actionStringWork.GET_LATEST_WORK) getLatestWork: (() => Promise<IWork[]>) | undefined;
 
 
   nextImage():void{
@@ -108,9 +108,9 @@ export default class Home extends Vue {
 
 
   created():void{
-    if(this.getWork){
+    if(this.getLatestWork){
       this.loading = true;
-      this.getWork().then(res => {
+      this.getLatestWork().then(res => {
         console.log(res);
         this.workList = res;
         this.loading = false;
