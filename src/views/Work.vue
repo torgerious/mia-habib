@@ -12,13 +12,23 @@
                         </div>
                     </div>
                 </div>
+
+              <div class="filter-mobile">
+                <div :class="{ 'active' : selectedCategory === cate }"  @click="setCategory(cate)" class="category" v-for="(cate, i) in localCategory" :key="i">
+                  <div>
+                    {{cate}}
+                  </div>
+                </div>
+              </div>
+
                 <br>
 
                 <loader v-if="loading"></loader>
                 <div class="article-wrapper">
-                    <article v-for="(item, i) in work" v-if="item.category === selectedFilter || selectedFilter === ''" @click="navigate(item.title)">
-                        <img loading=lazy :src="item.imageIngressUrl" alt="ingress">
-                        <h4> {{item.title}}</h4>
+                    <article v-for="(item, i) in work" v-if="item.category === selectedFilter || selectedFilter === ''" @click="navigate(item.title, item.category)">
+                        <img v-if="item.category !== 'films'" loading=lazy :src="item.imageIngressUrl" alt="ingress">
+                        <video v-else :src="item.imageIngressUrl" controls></video>
+                      <h4> {{item.title}}</h4>
                     </article>
                 </div>
             </div>
@@ -29,16 +39,16 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import HeaderBar from "@/components/HeaderBar.vue";
-    import {actionStringWork, Category, IWork} from "@/store/work";
-    import {Action} from "vuex-class";
-    import {category, workCategory} from "@/Types/Types";
-    import Loader from "@/components/loader.vue";
-    import FooterBar from "@/components/FooterBar.vue";
+import {Component, Vue, Watch} from 'vue-property-decorator';
+import HeaderBar from "@/components/HeaderBar.vue";
+import {actionStringWork, Category, IWork} from "@/store/work";
+import {Action} from "vuex-class";
+import {workCategory} from "@/Types/Types";
+import Loader from "@/components/loader.vue";
+import FooterBar from "@/components/FooterBar.vue";
 
 
-    @Component({
+@Component({
         components: {FooterBar, Loader, HeaderBar},
     })
 
@@ -57,7 +67,11 @@
             this.selectedCategoryFilter = category;
         }
 
-        navigate(route:string):void{
+        navigate(route:string, category:Category):void{
+          if(category === Category.films){
+            return;
+          }
+
             let prettyRoute = route.replace(/ /g,"-");
             this.$router.push('article/' + prettyRoute);
         }
@@ -73,19 +87,43 @@
         }
 
 
+      @Watch('$route')
+      runThis(old:any, tes:any):void{
+          // if(this.$route.query.filter){
+            this.setCategory(this.$route.query.filter as Category)
+            console.log("RAAAAAN")
+      }
+
+
+      updated():void{
+          console.log("UPDATED");
+        console.log("ROUTE", this.$route.query.filter)
+
+
+      }
 
         created(): void {
+
+
+
             if(this.getWork){
                 this.loading = true;
                 this.getWork().then(res => {
                     console.log(res);
                     this.work = res;
                     this.loading = false;
+                    if(this.$route.query.filter){
+                      this.setCategory(this.$route.query.filter as Category)
+                    }
                 }).catch(err => {
                     console.log(err);
                     this.loading = false;
                 })
             }
+
+
+
+
         }
     }
 
@@ -98,12 +136,24 @@
         margin: 0 auto;
         padding: 0 10px;
     }
+    .filter-mobile{
+      display: none;
+      .category{
+        margin: 5px;
+      }
+      @media only screen and (max-width: 800px) {
+        display: block;
+      }
+    }
 
     .filter{
         display: flex;
         padding: 0 0px;
         width:530px;
         justify-content: space-between;
+      @media only screen and (max-width: 800px) {
+        display: none;
+      }
     }
 
     .active{
@@ -119,6 +169,9 @@
         .main-header{
             text-align: left;
             margin: 28px 30px 12px 0px;
+            @media only screen and (max-width: 800px) {
+              text-align: center;
+            }
         }
         .article-wrapper{
             width: 100%;
@@ -144,6 +197,11 @@
                 height: 240px;
                 object-fit: cover;
             }
+          video{
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+          }
             h4{
                 margin-top: 9px;
             }

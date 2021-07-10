@@ -1,13 +1,13 @@
 <template>
   <div>
     <header-bar :has-background="true"></header-bar>
-    <div  class="page">
+    <div  >
       <h1>People </h1>
 
       <div  v-if="activePeople" class="modal"  @click.self="hideMenu">
         <div class="active-ppl">
           <button @click="hideMenu">exit</button>
-          <p>{{activePeople.name}}</p>
+          <h3>{{activePeople.name}}</h3>
           <p>{{activePeople.profession}}</p>
           <img :src="activePeople.image" alt="mia" >
           <p class="main-text">{{activePeople.description}}</p>
@@ -97,6 +97,7 @@ h1{
   transition: 0.3s;
   z-index: 9999;
   top:0;
+  overflow: scroll;
   .active-ppl{
     position: absolute;
     width: 90%;
@@ -106,6 +107,9 @@ h1{
     margin: 100px 5%;
     img{
       height: 250px;
+    }
+    h3{
+      line-height: 0px;
     }
     button{
       margin: 20px 0;

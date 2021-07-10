@@ -20,20 +20,22 @@
 
             <p>Kattegori</p>
             <select v-model="selected">
-                <option v-for="(cate, i) in localCategory" :key="i">{{cate}}</option>
+                <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
             </select>
-            <p>Velg artikkel fremside bilde</p>
+
+            <p v-if="selected !== 'films' ">Velg artikkel fremside bilde</p>
+            <p v-else>Last opp en video</p>
 
             <input type="file" @change="onFileSelectIngress">
             <img class="preview-image" v-if="previewIngressImageUrl !== ''" :src="previewIngressImageUrl"  alt="random">
 
-            <div class="editor-wrapper">
+            <div class="editor-wrapper" v-if="selected !== 'films'">
                 <vue-editor v-model="content"
                             useCustomImageHandler
                             @image-added="handleImageAdded">
                 </vue-editor>
             </div>
-            <button v-if="!loading" @click="addWork">Post</button>
+            <button class="submit-btn" v-if="!loading" @click="addWork">Post</button>
             <p v-if="loading">uploading.. </p>
           </div>
         </div>
@@ -58,7 +60,7 @@
                         @image-added="handleImageAdded">
             </vue-editor>
           </div>
-          <button v-if="!loading" @click="addCalendarEvent">Post</button>
+          <button class="submit-btn" v-if="!loading" @click="addCalendarEvent">Post</button>
           <p v-if="loading">uploading.. </p>
         </div>
       </div>
@@ -70,18 +72,30 @@
         <!-- POSTS -->
         <div class="list-header" v-if="activeTab === 1">
           <button class="add" @click="isShowingWorkForm = true">legg til ny +</button>
-
           <p v-if="activeTab === 1">Articles </p>
-      </div>
+        </div>
+        <!--FILTER-->
+        <div class="filter-wrapper"  v-if="activeTab === 1">
+          <div class="filter">
+            <div :style="[i === 0 ? {marginLeft:0} : {} ]" :class="{ 'active' : selectedCategory === cate }"  @click="setCategory(cate)" class="category" v-for="(cate, i) in localCategory" :key="i">
+              <div>
+                {{cate}}
+              </div>
+            </div>
+          </div>
+        </div>
+
       <div class="post-wrapper" v-if="activeTab === 1">
             <article
                     class="post"
                     v-for="(item, i) in work"
                     v-if="item.category === selectedFilter || selectedFilter === ''"
                     @click="navigate(item.title)">
-                <img loading=lazy :src="item.imageIngressUrl" alt="ingress">
+                <img v-if="item.category !== 'films'" loading=lazy :src="item.imageIngressUrl" alt="ingress">
+                <img v-else loading=lazy src="video.svg" alt="video">
+
                 <h4> {{item.title.substring(0,10)+".." }}</h4>
-                <p><span>{{item.category}}</span></p>
+                <p><span :class="item.category">{{item.category}}</span></p>
                 <button @click="editArticle(item.title)">Edit</button>
             </article>
         </div>
@@ -112,32 +126,44 @@
         <div class="content" v-if="currentEditingArticle">
           <button class="exit" @click="isEditingArticle = false">Exit</button>
 
-          <button class="delete" @click="deleteArticle"><span>🗑</span> Delete article</button>
+          <button class="delete" @click="deleteArticle"> Delete article</button>
 
           <p>Tittel</p>
           <input type="text" placeholder="title" v-model="currentEditingArticle.title">
 
           <p>Kattegori</p>
           <select v-model="currentEditingArticle.category">
-            <option v-for="(cate, i) in localCategory" :key="i">{{cate}}</option>
+            <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
           </select>
 
-          <div class="editor-wrapper">
+          <input type="file" @change="onFileSelectIngress">
+          <div v-if="currentEditingArticle.category !== 'films'">
+            <img class="preview-image" v-if="previewIngressImageUrl !== ''" :src="previewIngressImageUrl"  alt="random">
+            <img class="preview-image" v-else :src="currentEditingArticle.imageIngressUrl"  alt="random">
+          </div>
+          <div v-else>
+            <video class="preview-image" v-if="previewIngressImageUrl !== ''" :src="previewIngressImageUrl"></video>
+            <video class="preview-image" v-else :src="currentEditingArticle.imageIngressUrl"></video>
+          </div>
+
+
+          <div class="editor-wrapper" v-if="currentEditingArticle.category !== 'films'">
             <vue-editor v-model="currentEditingArticle.content"
                         useCustomImageHandler
                         @image-added="handleImageAdded">
             </vue-editor>
           </div>
-          <button @click="updateArticle(currentEditingArticle)">Update article</button>
+          <h3 v-if="loadingProgress">Upload is {{loadingProgress}} % done</h3>
+          <button class="update-btn" @click="updateArticle(currentEditingArticle)">Update article</button>
         </div>
       </div>
 
     <!-- EDITING CALENDAR EVENT -->
       <div v-if="isEditingEvent" class="add-wrapper">
-        <div class="content" v-if="currentEditingArticle">
+        <div class="content" v-if="isEditingEvent">
           <button class="exit" @click="isEditingEvent = false">Exit</button>
 
-          <button class="delete" @click="deleteArticle"><span>🗑</span> Delete article</button>
+          <button class="delete" @click="deleteEvent"><span>🗑</span>Delete event</button>
 
           <p>Tittel</p>
           <input type="text" placeholder="title" v-model="currentEditingCalendarEvent.title">
@@ -151,7 +177,7 @@
                         @image-added="handleImageAdded">
             </vue-editor>
           </div>
-          <button @click="updateArticle(currentEditingArticle)">Update article</button>
+          <button class="update-btn" @click="updateEvent(currentEditingCalendarEvent)">Update calendar event</button>
         </div>
       </div>
 
@@ -160,17 +186,17 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import firebase from 'firebase';
-    import {actionStringWork, Category, getterStringWork, IWork} from "@/store/work";
-    import {category, noMediaToolbar} from "@/Types/Types";
-    import { VueEditor } from "vue2-editor";
-    import {STORAGE} from "@/main";
-    import {Action, Getter} from "vuex-class";
-    import Loader from "@/components/loader.vue";
-    import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
+import {Component, Vue} from 'vue-property-decorator';
+import firebase from 'firebase';
+import {actionStringWork, Category, getterStringWork, IWork} from "@/store/work";
+import {category, noMediaToolbar} from "@/Types/Types";
+import {VueEditor} from "vue2-editor";
+import {STORAGE} from "@/main";
+import {Action, Getter} from "vuex-class";
+import Loader from "@/components/loader.vue";
+import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
 
-    @Component({
+@Component({
         components: {Loader, VueEditor},
     })
 
@@ -184,10 +210,8 @@
         @Getter(getterStringCalendarEvent.CALENDAR_EVENTS) calendarEvents: IWork[] | undefined;
         @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS) getCalendarEvents: (() => Promise<ICalendarEvent[]>) | undefined;
         @Action(actionStringCalendarEvent.UPDATE_CALENDAR_EVENT) updateCalendarEvent:((calendar:ICalendarEvent) => Promise<ICalendarEvent>) | undefined;
-
-
-
-
+        @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS_BY_ID) getCalendarEventsById:((calendarId:string) => Promise<ICalendarEvent>) | undefined;
+        @Action(actionStringCalendarEvent.DELETE_CALENDAR_EVENT) deleteCalendarEvent:((calendarId:string) => Promise<any>) | undefined;
 
 
 
@@ -197,7 +221,7 @@
         $router: any;
         isShowingWorkForm:boolean = false;
         localCategory:Category[] = category;
-        selected:Category = Category.all;
+        selected:Category = Category.projects;
         title:string = "";
         content:any = null;
         previewImageUrl:string = "";
@@ -217,14 +241,37 @@
         calendarText:any = null;
         isEditingEvent:boolean = false;
         currentEditingCalendarEvent:ICalendarEvent | null = null;
+        currentEditingEventId:string = "";
+        loadingProgress:number | null = null;
 
 
-      async updateArticle(article:IWork):Promise<void>{
+  setCategory(category:Category):void{
+    this.selectedCategory = category;
+    this.selectedCategoryFilter = category;
+  }
+
+
+  async updateArticle(article:IWork):Promise<void>{
         console.log("updated art", article);
+        article.imageIngressUrl = await this.onUploadIngress();
+
 
         if(this.updateWork){
-          let updateWork = await this.updateWork(article);
-          console.log("updatedWork?", updateWork);
+            let updateWork = await this.updateWork(article);
+            this.isEditingArticle = false;
+            console.log("updatedWork?", updateWork);
+          }
+        }
+
+      async updateEvent(event:ICalendarEvent):Promise<void>{
+        console.log("EVENT", event);
+        event.id = this.currentEditingEventId;
+        this.loading = true;
+        if(this.updateCalendarEvent){
+          let updatedEvent = await this.updateCalendarEvent(event);
+          this.loading = false
+          this.currentEditingEventId = "";
+          this.isEditingEvent = false;
         }
       }
 
@@ -249,9 +296,33 @@
             }
         }
 
+        async deleteEvent():Promise<void>{
+
+          let deleteChoice = confirm("Are you sure you want to delete this article?");
+          if (deleteChoice) {
+            if(this.deleteCalendarEvent){
+              let res = await this.deleteCalendarEvent(this.currentEditingEventId);
+              this.isEditingEvent = false;
+              console.log("local res del", res);
+            }
+          } else {
+
+          }
+
+
+        }
+
       async editCalendarEvent(eventId:string):Promise<void>{
         console.log("ID", eventId);
-        this.isEditingEvent = true;
+        this.currentEditingEventId = eventId;
+
+        if(this.getCalendarEventsById) {
+          this.currentEditingCalendarEvent = await this.getCalendarEventsById(eventId);
+          this.isEditingEvent = true;
+
+        }
+
+
 
         // if(this.getWorkById){
         //   let editingCalendar = await this.getWorkById(eventId);
@@ -269,9 +340,11 @@
                 let uploadTask = storageRef.child( "work/" + this.selectedIngressFileName).put(this.selectedIngressFile as any);
 
 
-                uploadTask.on('state_changed', function(snapshot:any){
+                uploadTask.on('state_changed', (snapshot:any) =>{
                     let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    this.loadingProgress = progress;
                     console.log('Upload is ' + progress + '% done');
+
                     switch (snapshot.state) {
                         case firebase.storage.TaskState.PAUSED: // or 'paused'
                             console.log('Upload is paused');
@@ -288,6 +361,7 @@
                     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) =>  {
                         console.log('File available at', downloadURL);
                         this.previewIngressImageUrl = downloadURL;
+                        this.loadingProgress = null;
                         resolve(downloadURL);
                     });
                 });
@@ -296,7 +370,7 @@
         }
 
         onFileSelectIngress(event:any):void{
-            console.log(event);
+          console.log(event);
             this.selectedIngressFile = event.target.files[0];
             let filename = event.target.files[0].name;
             let date = new Date();
@@ -313,6 +387,8 @@
             });
             fileReader.readAsDataURL(event.target.files[0]);
             this.previewIngressImageUrl = event.target.files[0]
+            console.log("SET PREVIEW", this.previewIngressImageUrl);
+
         }
 
 
@@ -396,12 +472,11 @@
 
       async addCalendarEvent():Promise<void>{
         let calendarEventToBePosted:ICalendarEvent = {title:this.calendarTitle, date:this.calendarDate, text:this.calendarText};
-
-        let res = await this.postCalendarEvent(calendarEventToBePosted);
-        console.log("add calendar ev", this.calendarDate);
-        console.log("add calendar ev", this.calendarText);
-        console.log("add calendar ev", this.calendarTitle);
-        console.log(res);
+        if(this.postCalendarEvent){
+          let res = await this.postCalendarEvent(calendarEventToBePosted);
+          this.isShowingCalendarForm = false;
+          console.log("the res", res);
+        }
 
       }
 
@@ -450,6 +525,40 @@
 </script>
 
 <style lang="scss" scoped>
+
+.update-btn{
+  background: #4de1ff30;
+  padding: 10px 13px;
+  border-radius: 5px;
+  border: 2px solid #25c0df40;
+  cursor: pointer;
+}
+.submit-btn{
+  cursor: pointer;
+  padding: 0 20px;
+  height: 35px;
+  margin: 7px 0;
+  background: #cbfff2;
+  color: #002b20;
+  border-radius: 5px;
+  border: 2px solid #87edd3;
+  font-weight: bold;
+}
+
+.filter-wrapper{
+  display: inline-flex;
+  width: 80%;
+  justify-content: space-between;
+  overflow: auto;
+  padding: 5px 0;
+  .filter{
+    width: auto;
+    margin-bottom: 20px;
+    .category{
+      margin: 0 5px;
+    }
+  }
+}
 
 .add{
   cursor: pointer;
@@ -598,6 +707,24 @@
     .post-wrapper{
         width:80%;
         margin:0 auto;
+        .films{
+          background: #ff8a8a !important;
+        }
+        .publications{
+          background: #8f4779 !important;
+        }
+        .reviews{
+          background: #ff9150 !important;
+        }
+        .performances{
+          background: #ff3150 !important;
+        }
+        .interview{
+          background: #ff3780 !important;
+        }
+        .media{
+          background: #ff3780 !important;
+        }
         .post{
             width: 100%;
             background: #f8f8f8;
@@ -631,7 +758,7 @@
                 background: #42b99b;
                 border-radius: 20px;
                 color: white;
-                padding: 2px 10px;
+              padding: 4px 12px;
             }
           .calendar-date{
             width:200px;

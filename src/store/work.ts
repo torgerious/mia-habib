@@ -52,13 +52,12 @@ export const getters: GetterTree<WorkState, any> = {
 };
 
 export const mutations: MutationTree<any> = {
-    setWork(state, payload:IWork[]){ console.log("PAYLOAD", payload), state.work = payload;}
+    setWork(state, payload:IWork[]){  state.work = payload;}
 };
 
 export const actions: ActionTree<WorkState, any> = {
 
     getWork({commit}): Promise<IWork[]> {
-        console.log("running get work");
         return new Promise((resolve, reject) => {
 
             let workList: IWork[] = [];
@@ -66,8 +65,6 @@ export const actions: ActionTree<WorkState, any> = {
             DB.collection("work").get().then((doc) => {
                 doc.forEach(res => {
                     let work: Partial<IWork> = res.data();
-                    console.log("data",work);
-                    console.log("res",res.id);
 
                     let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
                     workList.push(newContact as IWork);
@@ -88,18 +85,18 @@ export const actions: ActionTree<WorkState, any> = {
     },
 
     getLatestWork({commit}): Promise<IWork[]> {
-        console.log("running get latest work");
         return new Promise((resolve, reject) => {
 
             let workList: IWork[] = [];
 
-            DB.collection("work").limit(6).get().then((doc) => {
+            DB.collection("work").where("category", "in", ["projects", "performances", "Films", "publications"]).limit(6).get().then((doc) => {
                 doc.forEach(res => {
                     let work: Partial<IWork> = res.data();
 
                     let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
                     workList.push(newContact as IWork);
                 });
+
 
                 commit(mutationStringWork.SET_WORK, workList);
                 resolve(workList);
@@ -148,7 +145,6 @@ export const actions: ActionTree<WorkState, any> = {
     },
 
     postWork({commit, dispatch}, newWork:Partial<IWork>): Promise<void> {
-        console.log(newWork);
         return new Promise((resolve, reject) => {
         DB.collection("work").doc().set({
             title: newWork.title,
@@ -168,7 +164,6 @@ export const actions: ActionTree<WorkState, any> = {
 
 
     updateWork({commit, state, dispatch}, payload:IWork):Promise<IWork>{
-        console.log("payload inside", payload);
         return new Promise((resolve, reject) => {
 
             DB.collection("work").doc(payload.id as string).set({
@@ -179,8 +174,6 @@ export const actions: ActionTree<WorkState, any> = {
                 imageIngressUrl:payload.imageIngressUrl,
                 },
                 { merge: true }).then(function(doc:any){
-                console.log("RES pushed to state", payload);
-                console.log("RES pushed to state", doc);
                 dispatch(actionStringWork.GET_WORK);
                 resolve(payload);
             }).catch((err:any)=>{

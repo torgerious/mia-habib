@@ -3,7 +3,7 @@ import {DB} from '@/main';
 import {formatDate, FormatSpaceType} from "@/Types/formatDateHelper";
 import firebase from "firebase";
 import Timestamp = firebase.firestore.Timestamp;
-import {actionStringWork} from "@/store/work";
+import {actionStringWork, IWork} from "@/store/work";
 
 
 export interface CalendarEventState {
@@ -25,8 +25,9 @@ export const enum mutationStringCalendarEvent{
 export const enum actionStringCalendarEvent{
     POST_CALENDAR_EVENT = 'postCalendarEvent',
     GET_CALENDAR_EVENTS = 'getCalendarEvents',
-    UPDATE_CALENDAR_EVENT = 'updateCalendarEvent'
-
+    UPDATE_CALENDAR_EVENT = 'updateCalendarEvent',
+    GET_CALENDAR_EVENTS_BY_ID = 'getCalendarEventsById',
+    DELETE_CALENDAR_EVENT = 'deleteCalendarEvent',
 }
 export const enum getterStringCalendarEvent{
     CALENDAR_EVENTS = 'calendarEvents'
@@ -83,6 +84,29 @@ export const actions: ActionTree<CalendarEventState, any> = {
 
     },
 
+     deleteCalendarEvent({dispatch}, calendarID:string):Promise<any>{
+        return new Promise(async (resolve) => {
+            const res = await DB.collection('calendarEvent').doc(calendarID).delete();
+            console.log("delete res", res);
+            resolve(res);
+            dispatch(actionStringCalendarEvent.GET_CALENDAR_EVENTS);
+        })
+
+    },
+    getCalendarEventsById({commit}, calendarEventId):Promise<ICalendarEvent>{
+        return new Promise((resolve, reject) => {
+            DB.collection("calendarEvent").doc(calendarEventId).get().then((doc: any) => {
+                let data = doc.data();
+                console.log(data);
+                resolve(data);
+
+            }).catch((e: Error) => {
+                console.log("Error", e);
+                reject(e);
+            });
+        });
+    },
+
     postCalendarEvent({commit, dispatch}, newCalendarEvent:Partial<ICalendarEvent>): Promise<void> {
         console.log("running post cal", newCalendarEvent);
 
@@ -93,7 +117,7 @@ export const actions: ActionTree<CalendarEventState, any> = {
                 date: newCalendarEvent.date,
             }).then((res: any) => {
                 resolve(res);
-                // dispatch(actionStringCalendarEvent.a);
+                dispatch(actionStringCalendarEvent.GET_CALENDAR_EVENTS);
             }).catch((err: any) => {
                 console.log(err);
                 reject(err);

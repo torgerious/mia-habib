@@ -20,11 +20,11 @@
     <loader v-if="loading"></loader>
     <div  v-else class="home--content">
 
-      <article v-for="(work, i) in workList" :key="i + 'name'">
+      <article v-for="(work, i) in workList" :key="i + 'name'" @click="navigateArticle(work.title, work.category)">
         <div>
           <img :src="work.imageIngressUrl" alt="image">
         </div>
-        <p @click="navigate">{{work.title}}</p>
+        <p>{{work.title}}</p>
       </article>
 
     <div class="btn-wrapper">
@@ -39,10 +39,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import {Component, Vue} from 'vue-property-decorator';
 import HeaderBar from "@/components/HeaderBar.vue";
 import {Action} from "vuex-class";
-import {actionStringWork, IWork} from "@/store/work";
+import {actionStringWork, Category, IWork} from "@/store/work";
 import Loader from "@/components/loader.vue";
 import FooterMain from "@/components/FooterMain.vue";
 import FooterBar from "@/components/FooterBar.vue";
@@ -106,13 +106,25 @@ export default class Home extends Vue {
     this.$router.push(route);
   }
 
+  navigateArticle(route:string, category:Category):void{
+    if(category === Category.films){
+      return;
+    }
+
+    let prettyRoute = route.replace(/ /g,"-");
+    this.$router.push('article/' + prettyRoute);
+  }
+
 
   created():void{
     if(this.getLatestWork){
       this.loading = true;
       this.getLatestWork().then(res => {
-        console.log(res);
+
+        console.log("res after", res);
+
         this.workList = res;
+
         this.loading = false;
       }).catch(err => {
         console.log(err);
@@ -172,6 +184,7 @@ export default class Home extends Vue {
       -moz-transition: background 1s;
       -o-transition: background 1s;
       transition: background 1s;
+      background-position: center;
       background-color: #5e5b5b9c;
       &:hover .prev{
         opacity: 1;

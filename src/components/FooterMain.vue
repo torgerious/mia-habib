@@ -64,9 +64,21 @@
             max-width: 1100px;
             justify-content: center;
             padding: 20px 0;
+
+
+            @media only screen and (max-width: 800px) {
+              width:95%;
+              margin:0 2.5%;
+              display: block;
+            }
+
             .left{
               text-align: left;
               width:50%;
+              @media only screen and (max-width: 800px) {
+                width: 100%;
+                display: block;
+              }
               h2{
                 font-size: 40px;
               }
@@ -86,6 +98,12 @@
               display: flex;
               justify-content: flex-end;
               align-items: center;
+              @media only screen and (max-width: 800px) {
+                idth: 100%;
+                display: flex;
+                justify-content: start;
+                margin-top: 17px;
+              }
             }
         }
         .contact{
@@ -95,6 +113,11 @@
           justify-content: center;
           padding: 20px 0;
           margin: 0 auto;
+          @media only screen and (max-width: 800px) {
+            width:95%;
+            margin:0 2.5%;
+            display: block;
+          }
           //border-top: 2px solid #f0f0f0;
         }
         .copyright{

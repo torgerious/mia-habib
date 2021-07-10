@@ -4,9 +4,9 @@
             <div class="logo" @click="navigate('/')">Mia habib productions</div>
             <nav>
 <!--                <p class="not-menu" @click="navigate('about')">About</p>-->
-                <router-link tag="p" to="/about" exact >About</router-link>
-                <router-link tag="p" to="/work" exact >Work</router-link>
-                <router-link tag="p" to="/contact" exact >Contact</router-link>
+                <router-link class="links" tag="p" to="/about" exact >About</router-link>
+                <router-link class="links" tag="p" to="/work" exact >Work</router-link>
+                <router-link class="links" tag="p" to="/contact" exact >Contact</router-link>
 
 <!--              <p class="not-menu" @click="navigate('work')">Work</p>-->
 <!--                <p class="not-menu" @click="navigate('contact')">Contact</p>-->
@@ -76,7 +76,9 @@
 
     .dark{
         background:#333;
-
+      @media only screen and (max-width: 800px) {
+        height: 80px;
+      }
     }
 
     .wrapper{
@@ -84,11 +86,20 @@
         margin: 0 auto;
         height: 30px;
         font-size: 20px;
+      .links{
+          @media only screen and (max-width: 800px) {
+            display: none;
+          }
+        }
       p{
         cursor: pointer;
       }
       .logo{
         cursor: pointer;
+        @media only screen and (max-width: 800px) {
+          text-align:left;
+          width: 154px;
+        }
       }
     }
 
@@ -101,6 +112,11 @@
         font-size: 19px;
         padding: 20px 30px;
         display: flex;
+
+      @media only screen and (max-width: 800px) {
+        padding:20px 15px
+      }
+
         div{
             float:left;
             text-transform: uppercase;
@@ -111,6 +127,9 @@
             p{
                 float: left;
                 margin:5px 10px;
+              @media only screen and (max-width: 800px) {
+                margin:5px 0px;
+              }
             }
         }
     }

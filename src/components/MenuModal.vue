@@ -24,10 +24,10 @@
           <div class="line"></div>
 
             <nav>
-                <p>Performances</p>
-                <p>Projects</p>
-                <p>Publications</p>
-                <p>Films</p>
+                <p @click="navigate('work?filter=performances')">Performances</p>
+                <p @click="navigate('work?filter=projects')">Projects</p>
+                <p @click="navigate('work?filter=publications')">Publications</p>
+                <p @click="navigate('work?filter=films')">Films</p>
                 <p @click="navigate('press')">Press</p>
                 <p @click="navigate('calendar')">Calendar</p>
                 <p @click="navigate('people')">People</p>
@@ -64,7 +64,7 @@
         }
 
         navigate(route:string):void{
-          this.$router.push(route);
+          this.$router.push("/" + route);
           this.hideMenu();
         }
 
@@ -100,6 +100,9 @@
             max-width: 1072px;
             padding: 2px;
             margin: 0 auto;
+            @media only screen and (max-width: 800px) {
+              padding: 0px;
+            }
             &__content{
                 width: 300px;
                 margin-top: 58px;
@@ -109,6 +112,11 @@
                 padding: 11px 0px;
                 border-radius: 5px;
                 float:right;
+                @media only screen and (max-width: 800px) {
+                  margin-top: 0;
+                  width: 100%;
+                  height: 100vh;
+                }
                 p{
                     margin: 21px 10%;
                     font-weight: bold;

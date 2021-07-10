@@ -72,6 +72,14 @@ export default class Article extends Vue {
 </script>
 <style lang="scss" scoped>
 
+.wrapper{
+  max-width: 1100px;
+  @media only screen and (max-width: 1100px) {
+    width:95% !important;
+    margin:0 2.5%;
+  }
+}
+
 .bread-crumbs{
   left: 0;
   width: 109px;
@@ -123,6 +131,9 @@ h1{
       border-bottom-left-radius: 21px;
       border-top-left-radius: 21px;
       border-right: 2px solid;
+      @media only screen and (max-width: 1100px) {
+        font-size: 17px;
+      }
     }
     .title{
       font-weight: bold;
@@ -134,6 +145,9 @@ h1{
       padding-right: 5px;
       display: inline-block;
       width:90%;
+      @media only screen and (max-width: 1100px) {
+        margin-left: 13px;
+      }
     }
   }
 
@@ -155,6 +169,9 @@ h1{
       border-bottom-right-radius: 21px;
       border-top-right-radius: 21px;
       border-left: 2px solid;
+      @media only screen and (max-width: 1100px) {
+        font-size: 17px;
+      }
     }
     .title{
       font-weight: bold;
