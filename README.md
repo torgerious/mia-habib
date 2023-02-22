@@ -1,5 +1,7 @@
 # mia-habib
-
+```
+RUNS ON NODE VERSION 12.22.12 
+```
 ## Project setup
 ```
 npm install

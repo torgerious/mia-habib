@@ -13,6 +13,7 @@ export interface IWork{
     category:Category,
     content:string;
     imageIngressUrl:string;
+    markedForPreview:boolean,
 }
 
 export enum Category {
@@ -66,7 +67,7 @@ export const actions: ActionTree<WorkState, any> = {
                 doc.forEach(res => {
                     let work: Partial<IWork> = res.data();
 
-                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl};
+                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl, markedForPreview:work.markedForPreview};
                     workList.push(newContact as IWork);
                 });
 
@@ -127,7 +128,8 @@ export const actions: ActionTree<WorkState, any> = {
                         title:work.title,
                         category:work.category,
                         content:work.content,
-                        imageIngressUrl:work.imageIngressUrl
+                        imageIngressUrl:work.imageIngressUrl,
+                        markedForPreview:work.markedForPreview
                     };
 
                     workList.push(newWork as IWork);
@@ -151,7 +153,8 @@ export const actions: ActionTree<WorkState, any> = {
             content: newWork.content,
             imageUrl: newWork.imageUrl,
             category: newWork.category,
-            imageIngressUrl: newWork.imageIngressUrl
+            imageIngressUrl: newWork.imageIngressUrl,
+            markedForPreview: newWork.markedForPreview
         }).then((res: any) => {
             resolve(res);
             dispatch(actionStringWork.GET_WORK);
@@ -172,6 +175,7 @@ export const actions: ActionTree<WorkState, any> = {
                 category:payload.category,
                 content:payload.content,
                 imageIngressUrl:payload.imageIngressUrl,
+                markedForPreview:payload.markedForPreview,
                 },
                 { merge: true }).then(function(doc:any){
                 dispatch(actionStringWork.GET_WORK);

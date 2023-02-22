@@ -25,7 +25,10 @@
 
                 <loader v-if="loading"></loader>
                 <div class="article-wrapper">
-                    <article v-for="(item, i) in work" v-if="item.category === selectedFilter || selectedFilter === ''" @click="navigate(item.title, item.category)">
+                    <article v-for="(item, i) in work"
+                             v-if="item.category === selectedFilter || selectedFilter === ''"
+                             @click="navigate(item.title, item.category)">
+                        <span v-if="item.markedForPreview">Forhåndsvisning</span>
                         <img v-if="item.category !== 'films'" loading=lazy :src="item.imageIngressUrl" alt="ingress">
                         <video v-else :src="item.imageIngressUrl" controls></video>
                       <h4> {{item.title}}</h4>
@@ -46,6 +49,7 @@ import {Action} from "vuex-class";
 import {workCategory} from "@/Types/Types";
 import Loader from "@/components/loader.vue";
 import FooterBar from "@/components/FooterBar.vue";
+import firebase from "firebase";
 
 
 @Component({
@@ -87,6 +91,9 @@ import FooterBar from "@/components/FooterBar.vue";
         }
 
 
+
+
+
       @Watch('$route')
       runThis(old:any, tes:any):void{
           // if(this.$route.query.filter){
@@ -104,13 +111,28 @@ import FooterBar from "@/components/FooterBar.vue";
 
         created(): void {
 
-
-
             if(this.getWork){
                 this.loading = true;
                 this.getWork().then(res => {
-                    console.log(res);
-                    this.work = res;
+                    console.log("work res", res);
+
+
+
+                    const workWithoutPreviewArticles = res.filter(work =>  !work.markedForPreview);
+
+
+                  firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                      this.work = res;
+                    } else {
+                      this.work = workWithoutPreviewArticles;
+
+                    }
+                  });
+
+
+
+
                     this.loading = false;
                     if(this.$route.query.filter){
                       this.setCategory(this.$route.query.filter as Category)
@@ -182,6 +204,16 @@ import FooterBar from "@/components/FooterBar.vue";
             /*justify-content: center;*/
             justify-content: space-between;
             margin-top: 10px;
+          span{
+            position: absolute;
+            width: auto;
+            border-radius: 10px;
+            background: #ffd4b7;
+            color: black;
+            margin: 10px;
+            color: black;
+            padding: 3px 17px;
+          }
         article{
             width: 31%;
             justify-content: space-between;

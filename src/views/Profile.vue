@@ -13,6 +13,12 @@
       <div class="add-wrapper" v-if="isShowingWorkForm">
           <div class="content">
             <h3>Opprett ny artikkel</h3>
+
+            <div class="preview-container">
+              <label for="preview">Huk av for forhåndsvisning</label><br>
+              <input id="preview" type="checkbox" v-model="markedForPreview">
+            </div>
+
             <span @click="isShowingWorkForm = false">Exit</span>
 
             <p>Tittel</p>
@@ -128,6 +134,11 @@
 
           <button class="delete" @click="deleteArticle"> Delete article</button>
 
+          <div class="preview-container">
+            <label for="preview">Huk av/på forhåndsvisning</label><br>
+            <input id="preview" type="checkbox" v-model="currentEditingArticle.markedForPreview">
+          </div>
+
           <p>Tittel</p>
           <input type="text" placeholder="title" v-model="currentEditingArticle.title">
 
@@ -186,7 +197,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Vue, Watch} from 'vue-property-decorator';
 import firebase from 'firebase';
 import {actionStringWork, Category, getterStringWork, IWork} from "@/store/work";
 import {category, noMediaToolbar} from "@/Types/Types";
@@ -243,6 +254,8 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
         currentEditingCalendarEvent:ICalendarEvent | null = null;
         currentEditingEventId:string = "";
         loadingProgress:number | null = null;
+        markedForPreview:boolean = false;
+        isEditingThumbnail:boolean = false
 
 
   setCategory(category:Category):void{
@@ -251,15 +264,27 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
   }
 
 
+  @Watch('currentEditingArticle.imageIngressUrl')
+  runThis(oldImage: any, newImage: any){
+    console.log("OLD", oldImage)
+    console.log("NEW", newImage)
+
+  }
+
+
+
   async updateArticle(article:IWork):Promise<void>{
+
+
         console.log("updated art", article);
-        article.imageIngressUrl = await this.onUploadIngress();
+        if(this.isEditingThumbnail){
+          article.imageIngressUrl = await this.onUploadIngress();
+        }
 
 
         if(this.updateWork){
             let updateWork = await this.updateWork(article);
             this.isEditingArticle = false;
-            console.log("updatedWork?", updateWork);
           }
         }
 
@@ -389,6 +414,8 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
             this.previewIngressImageUrl = event.target.files[0]
             console.log("SET PREVIEW", this.previewIngressImageUrl);
 
+           this.isEditingThumbnail = true;
+
         }
 
 
@@ -397,7 +424,14 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
         async addWork():Promise<void>{
             let downloadURL = await this.onUploadIngress();
 
-            this.workToBePosted = {category:this.selected, title:this.title, imageUrl:this.previewImageUrl, content:this.content, imageIngressUrl:downloadURL };
+            this.workToBePosted = {
+              category:this.selected,
+              title:this.title,
+              imageUrl:this.previewImageUrl,
+              content:this.content,
+              imageIngressUrl:downloadURL,
+              markedForPreview:this.markedForPreview
+            };
 
             if(this.postWork) {
                 this.loading = true;
@@ -414,16 +448,12 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
 
             return new Promise((resolve, reject) => {
                 let storageRef = STORAGE.ref();
-
                 console.log("file", file);
 
                 let formData = new FormData();
                 formData.append('image', file);
-
                 console.log("formdata", formData);
-
                 let uploadTask = storageRef.child( "work/" + file.name).put(file as any);
-
                 uploadTask.on('state_changed', function(snapshot:any){
                     let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     console.log('Upload is ' + progress + '% done');
@@ -626,6 +656,17 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
     z-index: 9999;
     top: 0;
     overflow-y: auto;
+    .preview-container{
+      display: flex;
+      width: 40%;
+      margin: 5px 50% 39px 10%;
+      input[type=checkbox]{
+        margin-left: 10px;
+        height: 16px;
+        width: 16px;
+        cursor: pointer;
+      }
+    }
     .content{
       width:80%;
       margin:50px 10%;
