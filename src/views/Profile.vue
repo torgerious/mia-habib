@@ -38,6 +38,8 @@
             <div class="editor-wrapper" v-if="selected !== 'films'">
                 <vue-editor v-model="content"
                             useCustomImageHandler
+                            setupQuillEditor
+                            :editorOptions="editorSettings"
                             @image-added="handleImageAdded">
                 </vue-editor>
             </div>
@@ -201,11 +203,13 @@ import {Component, Vue, Watch} from 'vue-property-decorator';
 import firebase from 'firebase';
 import {actionStringWork, Category, getterStringWork, IWork} from "@/store/work";
 import {category, noMediaToolbar} from "@/Types/Types";
-import {VueEditor} from "vue2-editor";
+import {VueEditor } from "vue2-editor";
+import ImageResize from "quill-image-resize-module";
 import {STORAGE} from "@/main";
 import {Action, Getter} from "vuex-class";
 import Loader from "@/components/loader.vue";
 import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
+
 
 @Component({
         components: {Loader, VueEditor},
@@ -223,10 +227,17 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
         @Action(actionStringCalendarEvent.UPDATE_CALENDAR_EVENT) updateCalendarEvent:((calendar:ICalendarEvent) => Promise<ICalendarEvent>) | undefined;
         @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS_BY_ID) getCalendarEventsById:((calendarId:string) => Promise<ICalendarEvent>) | undefined;
         @Action(actionStringCalendarEvent.DELETE_CALENDAR_EVENT) deleteCalendarEvent:((calendarId:string) => Promise<any>) | undefined;
+      @Action(actionStringWork.DELETE_WORK_BY_ID) deleteWorkById:((workId:string) => Promise<any>) | undefined;
 
 
 
       // work:IWork[] = [];
+        editorSettings: {
+          modules: {
+            imageDrop: true;
+            imageResize: {};
+          };
+        } | undefined
         mediaToolBar:Array<any> = noMediaToolbar;
         loading:boolean = false;
         $router: any;
@@ -490,13 +501,19 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
 
         }
 
-        deleteArticle():void{
+        async deleteArticle():Promise<void>{
           let txt;
           let deleteChoice = confirm("Are you sure you want to delete this article?");
           if (deleteChoice) {
-            txt = "You pressed OK!";
+            console.log("Pressed ok", this.currentEditingArticle?.id)
+            if(this.deleteWorkById){
+              let res = await this.deleteWorkById(this.currentEditingArticle?.id as string);
+              this.isEditingArticle = false;
+
+            }
           } else {
-            txt = "You pressed Cancel!";
+            console.log("You pressed Cancel")
+
           }
         }
 

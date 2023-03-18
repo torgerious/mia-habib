@@ -1,6 +1,7 @@
 import { GetterTree, MutationTree, ActionTree } from "vuex";
 import { DB } from '@/main';
 import {category} from "@/Types/Types";
+import {actionStringCalendarEvent} from "@/store/calendarEvent";
 
 
 export interface WorkState {
@@ -38,7 +39,8 @@ export const enum actionStringWork{
     GET_LATEST_WORK = 'getLatestWork',
     POST_WORK = 'postWork',
     UPDATE_WORK = 'updateWork',
-    GET_WORK_BY_ID = 'getWorkById'
+    GET_WORK_BY_ID = 'getWorkById',
+    DELETE_WORK_BY_ID = 'deleteWorkById'
 }
 export const enum getterStringWork{
     WORK = 'work'
@@ -164,7 +166,15 @@ export const actions: ActionTree<WorkState, any> = {
         })
         })
     },
+    deleteWorkById({dispatch}, workId:string):Promise<any>{
+        return new Promise(async (resolve) => {
+            const res = await DB.collection('work').doc(workId).delete();
+            console.log("delete res", res);
+            resolve(res);
+            dispatch(actionStringWork.GET_WORK);
+        })
 
+    },
 
     updateWork({commit, state, dispatch}, payload:IWork):Promise<IWork>{
         return new Promise((resolve, reject) => {

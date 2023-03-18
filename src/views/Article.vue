@@ -31,6 +31,7 @@
 
 
         async created(): Promise<void> {
+          console.log("YAKL")
             let articleId = this.$route.params.id;
             let prettyRoute = articleId.replace(/-/g," ");
 
@@ -44,6 +45,13 @@
 
 </script>
 <style lang="scss" scoped>
+
+
+/deep/ .ql-video{
+  width:100% !important;
+  min-height: 460px !important;
+}
+
 .content{
     padding: 30px;
     max-width: 1000px;

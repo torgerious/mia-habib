@@ -28,7 +28,7 @@
                     <article v-for="(item, i) in work"
                              v-if="item.category === selectedFilter || selectedFilter === ''"
                              @click="navigate(item.title, item.category)">
-                        <span v-if="item.markedForPreview">Forhåndsvisning</span>
+                        <span v-if="item.markedForPreview">Forhåndsvisning 🔒</span>
                         <img v-if="item.category !== 'films'" loading=lazy :src="item.imageIngressUrl" alt="ingress">
                         <video v-else :src="item.imageIngressUrl" controls></video>
                       <h4> {{item.title}}</h4>
