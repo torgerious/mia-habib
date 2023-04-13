@@ -15,6 +15,7 @@ export interface IWork{
     content:string;
     imageIngressUrl:string;
     markedForPreview:boolean,
+    rider?:string,
 }
 
 export enum Category {
@@ -131,7 +132,8 @@ export const actions: ActionTree<WorkState, any> = {
                         category:work.category,
                         content:work.content,
                         imageIngressUrl:work.imageIngressUrl,
-                        markedForPreview:work.markedForPreview
+                        markedForPreview:work.markedForPreview,
+                        rider:work.rider
                     };
 
                     workList.push(newWork as IWork);
@@ -156,7 +158,8 @@ export const actions: ActionTree<WorkState, any> = {
             imageUrl: newWork.imageUrl,
             category: newWork.category,
             imageIngressUrl: newWork.imageIngressUrl,
-            markedForPreview: newWork.markedForPreview
+            markedForPreview: newWork.markedForPreview,
+            rider:newWork.rider,
         }).then((res: any) => {
             resolve(res);
             dispatch(actionStringWork.GET_WORK);

@@ -29,7 +29,10 @@
                 <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
             </select>
 
-            <p v-if="selected !== 'films' ">Velg artikkel fremside bilde</p>
+            <p>Last opp en fil / teknisk rider</p>
+            <input type="file" @change="handleFileUpload">
+
+            <p v-if="selected !== 'films' ">Velg artikkel fremsidebilde</p>
             <p v-else>Last opp en video</p>
 
             <input type="file" @change="onFileSelectIngress">
@@ -204,7 +207,6 @@ import firebase from 'firebase';
 import {actionStringWork, Category, getterStringWork, IWork} from "@/store/work";
 import {category, noMediaToolbar} from "@/Types/Types";
 import {VueEditor } from "vue2-editor";
-import ImageResize from "quill-image-resize-module";
 import {STORAGE} from "@/main";
 import {Action, Getter} from "vuex-class";
 import Loader from "@/components/loader.vue";
@@ -239,6 +241,8 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
           };
         } | undefined
         mediaToolBar:Array<any> = noMediaToolbar;
+
+        technicalRider:any;
         loading:boolean = false;
         $router: any;
         isShowingWorkForm:boolean = false;
@@ -367,6 +371,17 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
         // }
       }
 
+    handleFileUpload(event:any):void{
+      this.technicalRider = event.target.files[0]
+    }
+
+    async technicalRiderDownloadURL():Promise<any>{
+      let storageRef = STORAGE.ref();
+      const fileRef = storageRef.child(this.technicalRider.name)
+      await fileRef.put(this.technicalRider)
+      return await fileRef.getDownloadURL()
+    }
+
         async onUploadIngress():Promise<any>{
             // Create a root reference
             return new Promise((resolve, reject) => {
@@ -434,6 +449,7 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
 
         async addWork():Promise<void>{
             let downloadURL = await this.onUploadIngress();
+            let technicalRiderDownloadURL = await this.technicalRiderDownloadURL();
 
             this.workToBePosted = {
               category:this.selected,
@@ -441,7 +457,8 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
               imageUrl:this.previewImageUrl,
               content:this.content,
               imageIngressUrl:downloadURL,
-              markedForPreview:this.markedForPreview
+              markedForPreview:this.markedForPreview,
+              rider:technicalRiderDownloadURL,
             };
 
             if(this.postWork) {

@@ -6,6 +6,8 @@
             <article v-if="article != null">
                 <h1>{{article.title}}</h1>
                 <div v-html="article.content"></div>
+              <p>hello</p>
+                <a :href="article.rider"  v-if="article.rider">Teknisk rider 📃</a>
             </article>
         </div>
     </div>
@@ -50,6 +52,10 @@
 /deep/ .ql-video{
   width:100% !important;
   min-height: 460px !important;
+}
+a{
+  font-weight: bold;
+  color:#333;
 }
 
 .content{
