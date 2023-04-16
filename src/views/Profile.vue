@@ -41,8 +41,6 @@
             <div class="editor-wrapper" v-if="selected !== 'films'">
                 <vue-editor v-model="content"
                             useCustomImageHandler
-                            setupQuillEditor
-                            :editorOptions="editorSettings"
                             @image-added="handleImageAdded">
                 </vue-editor>
             </div>
@@ -234,12 +232,7 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
 
 
       // work:IWork[] = [];
-        editorSettings: {
-          modules: {
-            imageDrop: true;
-            imageResize: {};
-          };
-        } | undefined
+
         mediaToolBar:Array<any> = noMediaToolbar;
 
         technicalRider:any;
@@ -459,6 +452,7 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
               imageIngressUrl:downloadURL,
               markedForPreview:this.markedForPreview,
               rider:technicalRiderDownloadURL,
+
             };
 
             if(this.postWork) {

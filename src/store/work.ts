@@ -2,7 +2,8 @@ import { GetterTree, MutationTree, ActionTree } from "vuex";
 import { DB } from '@/main';
 import {category} from "@/Types/Types";
 import {actionStringCalendarEvent} from "@/store/calendarEvent";
-
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 export interface WorkState {
     work:IWork[] | null
@@ -16,6 +17,7 @@ export interface IWork{
     imageIngressUrl:string;
     markedForPreview:boolean,
     rider?:string,
+    created?:Date | string,
 }
 
 export enum Category {
@@ -56,7 +58,20 @@ export const getters: GetterTree<WorkState, any> = {
 };
 
 export const mutations: MutationTree<any> = {
-    setWork(state, payload:IWork[]){  state.work = payload;}
+    setWork(state, payload:IWork[]){
+
+
+        //ORDER BY DATE
+        payload.sort((a, b) => {
+            // @ts-ignore
+            const dateA = new Date(a.created).getTime();
+            // @ts-ignore
+            const dateB = new Date(b.created).getTime();
+            return dateB - dateA; // sort by newest to oldest date
+        });
+
+        state.work = payload;
+    }
 };
 
 export const actions: ActionTree<WorkState, any> = {
@@ -70,9 +85,23 @@ export const actions: ActionTree<WorkState, any> = {
                 doc.forEach(res => {
                     let work: Partial<IWork> = res.data();
 
-                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl, markedForPreview:work.markedForPreview};
+                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl, markedForPreview:work.markedForPreview, created:work.created};
+
                     workList.push(newContact as IWork);
                 });
+
+               // const test =  workList.sort((a, b) => {
+               //      // @ts-ignore
+               //      const dateA = new Date(b.created).getTime();
+               //      // @ts-ignore
+               //      const dateB = new Date(a.created).getTime();
+               //      return dateB - dateA; // sort by newest to oldest date
+               //  });
+
+               // console.log("order?", test);
+
+
+
 
                 commit(mutationStringWork.SET_WORK, workList);
                 resolve(workList);
@@ -152,6 +181,12 @@ export const actions: ActionTree<WorkState, any> = {
 
     postWork({commit, dispatch}, newWork:Partial<IWork>): Promise<void> {
         return new Promise((resolve, reject) => {
+            let currentDate = new Date();
+            let currentDateString = currentDate.toISOString();
+
+            console.log("currentDateString", currentDateString)
+
+
         DB.collection("work").doc().set({
             title: newWork.title,
             content: newWork.content,
@@ -160,6 +195,7 @@ export const actions: ActionTree<WorkState, any> = {
             imageIngressUrl: newWork.imageIngressUrl,
             markedForPreview: newWork.markedForPreview,
             rider:newWork.rider,
+            created:currentDateString,
         }).then((res: any) => {
             resolve(res);
             dispatch(actionStringWork.GET_WORK);
