@@ -18,6 +18,7 @@
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
     "vue2-editor": "^2.10.3",
+    "vuefire": "^3.1.0",
     "vuex": "^3.4.0",
     "vuex-class": "latest"
   },

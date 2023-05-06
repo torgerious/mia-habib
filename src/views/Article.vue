@@ -6,7 +6,9 @@
             <article v-if="article != null">
                 <h1>{{article.title}}</h1>
                 <div v-html="article.content"></div>
-              <p>hello</p>
+
+              <GallerySlider :images="images"></GallerySlider>
+
                 <a :href="article.rider"  v-if="article.rider">Teknisk rider 📃</a>
             </article>
         </div>
@@ -19,13 +21,20 @@
     import {actionStringWork, IWork} from "@/store/work";
     import HeaderBar from "@/components/HeaderBar.vue";
     import Loader from "@/components/loader.vue";
+    import GallerySlider from "@/components/GallerySlider.vue";
 
     @Component({
-        components: {Loader, HeaderBar},
+        components: {GallerySlider, Loader, HeaderBar},
     })
 
     export default class Article extends Vue {
         @Action(actionStringWork.GET_WORK_BY_ID) getWorkById: ((workId: string) => Promise<IWork>) | undefined;
+
+        images:Array<string> = [
+          'https://picsum.photos/id/1002/600/400',
+          'https://picsum.photos/id/1004/600/400',
+          'https://picsum.photos/id/1011/600/400'
+        ]
 
         $route: any;
         article:IWork | null = null;

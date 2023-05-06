@@ -8,6 +8,7 @@
       <button class="post-btn" :class="{activeTab: activeTab === 1}" @click="activeTab = 1"> Artikler</button>
       <button class="post-btn" :class="{activeTab: activeTab === 2}" @click="activeTab = 2"> Kalender</button>
       <button class="post-btn" :class="{activeTab: activeTab === 3}" @click="activeTab = 3"> Presenters</button>
+        <button class="post-btn" :class="{activeTab: activeTab === 4}" @click="activeTab = 4"> Galleri slider</button>
 
 
       <div class="add-wrapper" v-if="isShowingWorkForm">
@@ -73,6 +74,23 @@
           <p v-if="loading">uploading.. </p>
         </div>
       </div>
+
+        <div class="add-wrapper" v-if="isShowingGalleryForm">
+            <div class="content">
+                <h3>Opprett nytt bildegalleri</h3>
+                <span @click="isShowingCalendarForm = false">Exit</span>
+
+                <p>Galleri slider tittel</p>
+                <input type="text" placeholder="title" v-model="gallerySliderTitle">
+
+                <MultipleFileUploader></MultipleFileUploader>
+
+                <button class="submit-btn" v-if="!loading" @click="addGallerySlider">Post</button>
+                <p v-if="loading">uploading.. </p>
+            </div>
+        </div>
+
+
         <br>
         <loader v-if="loading"></loader>
 
@@ -196,6 +214,25 @@
       </div>
 
 
+    <!--  GALLERY SLIDER -->
+        <div class="list-header" v-if="activeTab === 4">
+            <button class="add" @click="isShowingGalleryForm = true">legg til ny +</button>
+            <p >Galleri slider </p>
+        </div>
+        <div class="post-wrapper" v-if="activeTab === 4">
+            <article
+                    class="post"
+                    v-for="(item, i) in calendarEvents">
+                <p class="calendar-date"><span>{{item.date}}</span></p>
+                <p>{{item.title}}</p>
+                <div v-html="item.text.substring(0,10)+'..'"></div>
+                <button @click="editCalendarEvent(item.id)">Edit</button>
+            </article>
+        </div>
+
+
+
+
     </div>
 </template>
 
@@ -209,10 +246,11 @@ import {STORAGE} from "@/main";
 import {Action, Getter} from "vuex-class";
 import Loader from "@/components/loader.vue";
 import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
+import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
 
 
 @Component({
-        components: {Loader, VueEditor},
+        components: {MultipleFileUploader, Loader, VueEditor},
     })
 
     export default class Profile extends Vue {
@@ -234,7 +272,7 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
       // work:IWork[] = [];
 
         mediaToolBar:Array<any> = noMediaToolbar;
-
+        gallerySliderTitle: string = "";
         technicalRider:any;
         loading:boolean = false;
         $router: any;
@@ -255,6 +293,7 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
         currentEditingArticle:IWork | null = null;
         activeTab:number | null = null;
         isShowingCalendarForm:boolean = false;
+        isShowingGalleryForm:boolean = false;
         calendarTitle:string = "";
         calendarDate:string = "";
         calendarText:any = null;
@@ -535,8 +574,17 @@ import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} fr
           this.isShowingCalendarForm = false;
           console.log("the res", res);
         }
-
       }
+
+    async addGallerySlider():Promise<void>{
+        // let calendarEventToBePosted:ICalendarEvent = {title:this.calendarTitle, date:this.calendarDate, text:this.calendarText};
+        // if(this.postCalendarEvent){
+        //     let res = await this.postCalendarEvent(calendarEventToBePosted);
+        //     this.isShowingCalendarForm = false;
+        //     console.log("the res", res);
+        // }
+    }
+
 
         created(): void {
 
