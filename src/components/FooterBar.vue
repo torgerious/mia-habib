@@ -28,7 +28,7 @@
 <!--      </p>-->
 <!--    </div>-->
           <div class="copyright">
-            <p> <i>&#xa9;miahabib 2021 - <span @click="contact" class="contact">contact</span></i></p>
+            <p> <i>&#xa9;miahabib {{ this.currentYear}} - <span @click="contact" class="contact">contact</span></i></p>
           </div>
   </footer>
 </template>
@@ -43,8 +43,10 @@ import InstagramIcon from "@/components/instagramIcon.vue";
 })
 
 export default class FooterBar extends Vue {
-  created(): void {
+    currentYear:any = null;
 
+  created(): void {
+    this.currentYear = new Date().getFullYear();
   }
   contact():void{
     this.$router.push("/contact");

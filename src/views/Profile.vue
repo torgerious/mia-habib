@@ -408,10 +408,15 @@ import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
     }
 
     async technicalRiderDownloadURL():Promise<any>{
-      let storageRef = STORAGE.ref();
-      const fileRef = storageRef.child(this.technicalRider.name)
-      await fileRef.put(this.technicalRider)
-      return await fileRef.getDownloadURL()
+            console.log(this.technicalRider)
+            if(this.technicalRider !== undefined){
+                let storageRef = STORAGE.ref();
+                const fileRef = storageRef.child(this.technicalRider.name)
+                await fileRef.put(this.technicalRider)
+                return await fileRef.getDownloadURL()
+            } else{
+                return null;
+            }
     }
 
         async onUploadIngress():Promise<any>{

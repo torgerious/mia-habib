@@ -22,7 +22,7 @@ export default class MultipleFileUploader extends Vue {
             // Read the file and create a preview URL
             const reader = new FileReader()
             reader.onload = (e) => {
-                this.previewImages.push(e.target.result)
+                this.previewImages.push(e.target?.result)
             }
             reader.readAsDataURL(files[i])
         }
@@ -42,7 +42,8 @@ export default class MultipleFileUploader extends Vue {
             // Read the file and create a preview URL
             const reader = new FileReader()
             reader.onload = (e) => {
-                this.previewImages.push(e.target.result)
+
+                this.previewImages.push(e.target?.result)
             }
             reader.readAsDataURL(files[i])
         }
