@@ -10,11 +10,12 @@ import Calendar from "@/views/Calendar.vue";
 import Contact from "@/views/Contact.vue";
 import People from "@/views/People.vue";
 import Presenters from "@/views/Presenters.vue";
+import Construction from "@/views/Construction.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
-  {path: '/', name: 'Home', component: Home },
+  { path: '/', name: 'construction', component: Construction },
   { path: '/work', name: 'Work', component: Work },
   { path: '/login', name: 'Login', component: Login},
   { path: '/profile', name: 'profile', component: Profile},
@@ -24,6 +25,8 @@ const routes: Array<RouteConfig> = [
   { path: '/contact', name: 'contact', component: Contact},
   { path: '/people', name: 'people', component: People},
   { path: '/presenters', name: 'presenters', component: Presenters},
+  { path: '/home', name: 'Home', component: Home },
+
 
   {path: '/about', name: 'About' ,
     // route level code-splitting
