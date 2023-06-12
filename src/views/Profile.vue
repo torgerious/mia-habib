@@ -20,7 +20,7 @@
               <input id="preview" type="checkbox" v-model="markedForPreview">
             </div>
 
-            <span @click="isShowingWorkForm = false">Exit</span>
+            <span @click="exitModal">Exit</span>
 
             <p>Tittel</p>
             <input type="text" placeholder="title" v-model="title">
@@ -83,9 +83,9 @@
                 <p>Galleri slider tittel</p>
                 <input type="text" placeholder="title" v-model="gallerySliderTitle">
 
-                <MultipleFileUploader></MultipleFileUploader>
+                <MultipleFileUploader @success="handleUploadSuccess" ></MultipleFileUploader>
 
-                <button class="submit-btn" v-if="!loading" @click="addGallerySlider">Post</button>
+<!--                <button class="submit-btn" v-if="!loading" @click="addGallerySlider">Post</button>-->
                 <p v-if="loading">uploading.. </p>
             </div>
         </div>
@@ -247,6 +247,7 @@ import {Action, Getter} from "vuex-class";
 import Loader from "@/components/loader.vue";
 import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
 import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
+import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 
 
 @Component({
@@ -265,7 +266,8 @@ import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
         @Action(actionStringCalendarEvent.UPDATE_CALENDAR_EVENT) updateCalendarEvent:((calendar:ICalendarEvent) => Promise<ICalendarEvent>) | undefined;
         @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS_BY_ID) getCalendarEventsById:((calendarId:string) => Promise<ICalendarEvent>) | undefined;
         @Action(actionStringCalendarEvent.DELETE_CALENDAR_EVENT) deleteCalendarEvent:((calendarId:string) => Promise<any>) | undefined;
-      @Action(actionStringWork.DELETE_WORK_BY_ID) deleteWorkById:((workId:string) => Promise<any>) | undefined;
+        @Action(actionStringWork.DELETE_WORK_BY_ID) deleteWorkById:((workId:string) => Promise<any>) | undefined;
+        @Action(actionStringImageGallery.POST_GALLERY_SLIDER) postGallerySlider: ((imageGallery: IimageGallery) => Promise<void>) | undefined;
 
 
 
@@ -309,6 +311,19 @@ import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
     this.selectedCategory = category;
     this.selectedCategoryFilter = category;
   }
+
+    handleUploadSuccess(success: any){
+        console.log("success ??", success);
+        if(success){
+            this.isShowingGalleryForm = false;
+        }
+    }
+
+    async handleImageUrls(imageUrls:any){
+            console.log("iamgeurls", imageUrls)
+        if(this.postGallerySlider)
+        await this.postGallerySlider(imageUrls);
+    }
 
 
   @Watch('currentEditingArticle.imageIngressUrl')
@@ -407,6 +422,11 @@ import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
       this.technicalRider = event.target.files[0]
     }
 
+    exitModal():void{
+            this.isShowingWorkForm = false;
+            this.clearForm();
+    }
+
     async technicalRiderDownloadURL():Promise<any>{
             console.log(this.technicalRider)
             if(this.technicalRider !== undefined){
@@ -481,6 +501,17 @@ import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
 
         }
 
+        clearForm():void{
+            this.technicalRider = null;
+            this.title = "";
+            this.content = null;
+            this.previewImageUrl = "";
+            this.workToBePosted = null;
+            this.selectedIngressFile = null;
+            this.selectedIngressFileName = "";
+            this.markedForPreview = false;
+        }
+
 
 
 
@@ -505,6 +536,7 @@ import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
                 console.log("res promise", res);
                 this.loading = false;
                 this.isShowingWorkForm = false;
+                this.clearForm();
             }
 
             console.log("work", this.content);

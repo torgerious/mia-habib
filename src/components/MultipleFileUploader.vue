@@ -1,16 +1,24 @@
 <script lang="ts">
-import {Vue, Component} from 'vue-property-decorator';
+import {Vue, Component, Emit} from 'vue-property-decorator';
 import firebase from 'firebase/app'
 import 'firebase/storage'
 import { firestorePlugin } from 'vuefire'
+import {Action} from "vuex-class";
+import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 @Component({})
 export default class MultipleFileUploader extends Vue {
+    @Action(actionStringImageGallery.POST_GALLERY_SLIDER) postGallerySlider: ((imageGallery: IimageGallery) => Promise<void>) | undefined;
 
     images:Array<any> = [];
     previewImages:Array<any> = [];
-    isDragging =false;
-    message:string = 'Drag and drop images here or click to select images.';
+    isDragging = false;
+    message:string = 'Drag and drop images here or use button to the left.';
     dropMessage:string = 'Drop images here to upload.';
+    uploadedUrls:IimageGallery | any = [];
+
+
+
+
     onFileChange (event:any) {
         // Get the files from the input element
         const files = event.target.files
@@ -52,9 +60,23 @@ export default class MultipleFileUploader extends Vue {
         this.isDragging = false
     }
 
+
+    async postSlider(){
+        await this.uploadImages();
+
+        console.log("dafuq", this.uploadedUrls);
+
+        setTimeout(async () => {
+            if (this.postGallerySlider)
+                await this.postGallerySlider(this.uploadedUrls);
+        }, 1000)
+
+    }
+
     uploadImages () {
         // Get a reference to the storage service
         const storage = firebase.storage()
+
 
         // Loop through the images array and upload each image
         for (let i = 0; i < this.images.length; i++) {
@@ -69,8 +91,20 @@ export default class MultipleFileUploader extends Vue {
 
             // Upload the image to the storage location
             storageRef.put(file)
-                .then(() => {
+                .then((url) => {
                     console.log('Image uploaded successfully!')
+                    storageRef.getDownloadURL()
+                        .then(url => {
+                            console.log("url?", url)
+                            this.uploadedUrls.push(url) // Add the URL to the array
+
+                            // If all images have been uploaded, emit the 'upload-success' event with the array of URLs
+                            this.$emit('success', true)
+                            // this.$emit('imageUrls', this.uploadedUrls)
+
+
+                        })
+
                 })
                 .catch(error => {
                     console.error(error)
@@ -78,6 +112,8 @@ export default class MultipleFileUploader extends Vue {
         }
 
         // Clear the images and previewImages arrays
+        console.log("bef", this.uploadedUrls);
+        // this.uploadedUrls = [];
         this.images = []
         this.previewImages = []
     }
@@ -94,7 +130,7 @@ export default class MultipleFileUploader extends Vue {
 <template>
     <div>
         <div class="drop-zone" ref="dropZone" @drop="onDrop" @dragover.prevent>
-            <input type="file" multiple style="display: none;" ref="fileInput" @change="onFileChange">
+            <input type="file" multiple ref="fileInput" @change="onFileChange">
             <p v-if="!isDragging">{{ message }}</p>
             <p v-else>{{ dropMessage }}</p>
         </div>
@@ -104,11 +140,23 @@ export default class MultipleFileUploader extends Vue {
                 <img :src="image" style="max-width: 200px; max-height: 200px;">
             </div>
         </div>
-        <button @click="uploadImages">Upload Images</button>
+        <button @click="postSlider" class="submit-btn">Upload Images</button>
     </div>
 </template>
 
 <style scoped lang="scss">
+
+.submit-btn{
+    cursor: pointer;
+    padding: 0 20px;
+    height: 35px;
+    margin: 7px 0;
+    background: #cbfff2;
+    color: #002b20;
+    border-radius: 5px;
+    border: 2px solid #87edd3;
+    font-weight: bold;
+}
 
 .drop-zone {
   border: 2px dashed gray;

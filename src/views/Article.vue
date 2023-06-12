@@ -61,7 +61,11 @@
 /deep/ .ql-video{
   width:100% !important;
   min-height: 460px !important;
+    @media screen and (max-width: 800px) {
+        min-height: 260px !important;
+    }
 }
+
 a{
   font-weight: bold;
   color:#333;
