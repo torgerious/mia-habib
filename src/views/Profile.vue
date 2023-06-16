@@ -217,15 +217,16 @@
     <!--  GALLERY SLIDER -->
         <div class="list-header" v-if="activeTab === 4">
             <button class="add" @click="isShowingGalleryForm = true">legg til ny +</button>
-            <p >Galleri slider </p>
+            <p >Galleri slider</p>
         </div>
         <div class="post-wrapper" v-if="activeTab === 4">
             <article
                     class="post"
-                    v-for="(item, i) in calendarEvents">
-                <p class="calendar-date"><span>{{item.date}}</span></p>
-                <p>{{item.title}}</p>
-                <div v-html="item.text.substring(0,10)+'..'"></div>
+                    v-for="(item, i) in this.gallerySlideList">
+                <p class="calendar-date"><span>{{item.title}}</span></p>
+                <div class="image-list">
+                  <img  v-for="img in item.images" :src="img"  :alt="item.title"/>
+                </div>
                 <button @click="editCalendarEvent(item.id)">Edit</button>
             </article>
         </div>
@@ -268,6 +269,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         @Action(actionStringCalendarEvent.DELETE_CALENDAR_EVENT) deleteCalendarEvent:((calendarId:string) => Promise<any>) | undefined;
         @Action(actionStringWork.DELETE_WORK_BY_ID) deleteWorkById:((workId:string) => Promise<any>) | undefined;
         @Action(actionStringImageGallery.POST_GALLERY_SLIDER) postGallerySlider: ((imageGallery: IimageGallery) => Promise<void>) | undefined;
+        @Action(actionStringImageGallery.GET_GALLERY_SLIDER) getGallerySlider: (() => Promise<IimageGallery[]>) | undefined;
 
 
 
@@ -305,7 +307,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         loadingProgress:number | null = null;
         markedForPreview:boolean = false;
         isEditingThumbnail:boolean = false
-
+        gallerySlideList:IimageGallery[] = [];
 
   setCategory(category:Category):void{
     this.selectedCategory = category;
@@ -661,6 +663,17 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
               })
             }
 
+            if(this.getGallerySlider){
+                this.loading = true;
+                this.getGallerySlider().then(res => {
+                    this.loading = false;
+                    console.log("RES", res);
+                    this.gallerySlideList = res;
+                }).catch(err => {
+                    this.loading = false;
+                })
+            }
+
 
         }
     }
@@ -861,6 +874,16 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
     .post-wrapper{
         width:80%;
         margin:0 auto;
+      .image-list{
+        display: flex;
+        img{
+          width: 30px;
+          height: 30px;
+          object-fit: cover;
+          margin:2px;
+        }
+      }
+
         .films{
           background: #ff8a8a !important;
         }

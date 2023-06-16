@@ -16,7 +16,7 @@ export const state:ImageGalleryState = {
 
 export const enum actionStringImageGallery{
     POST_GALLERY_SLIDER = 'postGallerySlider',
-    getGallerySlider = 'getGallerySlider',
+    GET_GALLERY_SLIDER = 'getGallerySlider',
 }
 
 export const actions: ActionTree<ImageGalleryState, any> = {
@@ -31,7 +31,7 @@ export const actions: ActionTree<ImageGalleryState, any> = {
 
             DB.collection("imageGallery").doc().set(newObj).then((res: any) => {
                 resolve(res);
-                // dispatch(actionStringImageGallery.getGallerySlider);
+                dispatch(actionStringImageGallery.GET_GALLERY_SLIDER);
             }).catch((err: any) => {
                 console.log(err);
                 reject(err);

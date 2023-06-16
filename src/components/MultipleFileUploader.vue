@@ -15,6 +15,7 @@ export default class MultipleFileUploader extends Vue {
     message:string = 'Drag and drop images here or use button to the left.';
     dropMessage:string = 'Drop images here to upload.';
     uploadedUrls:IimageGallery | any = [];
+    isLoading:boolean = false;
 
 
 
@@ -62,60 +63,53 @@ export default class MultipleFileUploader extends Vue {
 
 
     async postSlider(){
-        await this.uploadImages();
+        this.isLoading = true;
 
-        console.log("dafuq", this.uploadedUrls);
+        try {
 
-        setTimeout(async () => {
+            await this.uploadImages();
+
+            console.log("dafuq", this.uploadedUrls);
+
             if (this.postGallerySlider)
                 await this.postGallerySlider(this.uploadedUrls);
-        }, 1000)
+
+
+            this.isLoading = false;
+        }catch (e){
+            this.isLoading = false;
+        }
+
+
 
     }
 
-    uploadImages () {
-        // Get a reference to the storage service
-        const storage = firebase.storage()
+    async uploadImages() {
+        const storage = firebase.storage();
+        const uploadPromises = [];
 
-
-        // Loop through the images array and upload each image
         for (let i = 0; i < this.images.length; i++) {
-            // Get a reference to the image file
-            const file = this.images[i]
+            const file = this.images[i];
+            const filename = Date.now() + '_' + file.name;
+            const storageRef = storage.ref('imagegallery/' + filename);
 
-            // Create a unique filename for the image
-            const filename = Date.now() + '_' + file.name
-
-            // Get a reference to the image storage location
-            const storageRef = storage.ref('imagegallery/' + filename)
-
-            // Upload the image to the storage location
-            storageRef.put(file)
-                .then((url) => {
-                    console.log('Image uploaded successfully!')
-                    storageRef.getDownloadURL()
-                        .then(url => {
-                            console.log("url?", url)
-                            this.uploadedUrls.push(url) // Add the URL to the array
-
-                            // If all images have been uploaded, emit the 'upload-success' event with the array of URLs
-                            this.$emit('success', true)
-                            // this.$emit('imageUrls', this.uploadedUrls)
-
-
-                        })
-
+            const uploadPromise = storageRef.put(file)
+                .then(() => storageRef.getDownloadURL())
+                .then(url => {
+                    this.uploadedUrls.push(url);
                 })
                 .catch(error => {
-                    console.error(error)
-                })
+                    console.error(error);
+                });
+
+            uploadPromises.push(uploadPromise);
         }
 
-        // Clear the images and previewImages arrays
-        console.log("bef", this.uploadedUrls);
-        // this.uploadedUrls = [];
-        this.images = []
-        this.previewImages = []
+        // Wait for all uploads to complete
+        await Promise.all(uploadPromises);
+
+        this.images = [];
+        this.previewImages = [];
     }
 
 
