@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Admin panel</h1>
+        <h1>Admin panel <span class="version">version 1.0.0</span></h1>
 
 <!--      <button class="post-btn" @click="isShowingWorkForm = true">Artikkler</button>-->
 <!--      <button class="post-btn" @click="isShowingWorkForm = true">Kalender</button>-->
@@ -172,6 +172,7 @@
           <div v-if="currentEditingArticle.category !== 'films'">
             <img class="preview-image" v-if="previewIngressImageUrl !== ''" :src="previewIngressImageUrl"  alt="random">
             <img class="preview-image" v-else :src="currentEditingArticle.imageIngressUrl"  alt="random">
+              <h1>hello</h1>
           </div>
           <div v-else>
             <video class="preview-image" v-if="previewIngressImageUrl !== ''" :src="previewIngressImageUrl"></video>
@@ -538,6 +539,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
                 console.log("res promise", res);
                 this.loading = false;
                 this.isShowingWorkForm = false;
+                this.previewIngressImageUrl = '';
                 this.clearForm();
             }
 
@@ -681,6 +683,12 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 </script>
 
 <style lang="scss" scoped>
+
+.version{
+  color:gray;
+  font-size: 12px;
+  display: block;
+}
 
 .update-btn{
   background: #4de1ff30;
