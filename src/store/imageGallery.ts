@@ -4,6 +4,8 @@ import {DB} from "@/main";
 
 export interface IimageGallery{
     imageGallery:Array<string>
+    title:string,
+    created:string | Date,
 }
 interface ImageGalleryState{
     imageGallery: IimageGallery | null
@@ -22,7 +24,9 @@ export const enum actionStringImageGallery{
 export const actions: ActionTree<ImageGalleryState, any> = {
 
     postGallerySlider({commit, dispatch}, newImageGallery: IimageGallery): Promise<void> {
-        const newObj = {images: newImageGallery, title: "torger - test"}
+
+        const currentDate = new Date();
+        const newObj = {images: newImageGallery.imageGallery, title: newImageGallery.title, created:currentDate}
 
         return new Promise((resolve, reject) => {
 

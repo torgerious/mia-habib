@@ -83,7 +83,7 @@
                 <p>Galleri slider tittel</p>
                 <input type="text" placeholder="title" v-model="gallerySliderTitle">
 
-                <MultipleFileUploader @success="handleUploadSuccess" ></MultipleFileUploader>
+                <MultipleFileUploader @success="handleUploadSuccess" v-model="gallerySliderTitle" ></MultipleFileUploader>
 
 <!--                <button class="submit-btn" v-if="!loading" @click="addGallerySlider">Post</button>-->
                 <p v-if="loading">uploading.. </p>
@@ -315,10 +315,12 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
     this.selectedCategoryFilter = category;
   }
 
-    handleUploadSuccess(success: any){
+    async handleUploadSuccess(success: any){
         console.log("success ??", success);
         if(success){
             this.isShowingGalleryForm = false;
+            await this.fetchGallerySlider();
+
         }
     }
 
@@ -627,7 +629,30 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
     }
 
 
-        created(): void {
+    async fetchGallerySlider():Promise<void>{
+        if(this.getGallerySlider){
+            this.loading = true;
+            this.getGallerySlider().then(res => {
+                this.loading = false;
+
+                const sorted = res.sort((a, b) => {
+                    const dateA = new Date(a.created.seconds * 1000 + a.created.nanoseconds / 1000000);
+                    const dateB = new Date(b.created.seconds * 1000 + b.created.nanoseconds / 1000000);
+                    return dateB - dateA;
+                });
+
+                this.gallerySlideList = sorted;
+
+
+
+            }).catch(err => {
+                this.loading = false;
+            })
+        }
+    }
+
+
+        async created(): Promise<void> {
 
             this.activeTab = 1;
 
@@ -646,7 +671,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
             });
 
 
-            if(this.getWork){
+            if (this.getWork) {
                 this.loading = true;
                 this.getWork().then(res => {
                     // this.work = res;
@@ -656,25 +681,16 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
                 })
             }
 
-            if(this.getCalendarEvents){
-              this.loading = true;
-              this.getCalendarEvents().then(res => {
-                this.loading = false;
-              }).catch(err => {
-                this.loading = false;
-              })
-            }
-
-            if(this.getGallerySlider){
+            if (this.getCalendarEvents) {
                 this.loading = true;
-                this.getGallerySlider().then(res => {
+                this.getCalendarEvents().then(res => {
                     this.loading = false;
-                    console.log("RES", res);
-                    this.gallerySlideList = res;
                 }).catch(err => {
                     this.loading = false;
                 })
             }
+
+            await this.fetchGallerySlider();
 
 
         }

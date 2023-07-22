@@ -8,7 +8,7 @@
     <div class="background-image"></div>
     <div class="container">
       <h1>MIA HABIB PRODUCTIONS</h1>
-      <p><strong>NEW WEBSITE WILL BE READY IN JUNE - STAY TUNED</strong></p>
+      <p><strong>NEW WEBSITE WILL BE READY IN AUGUST - STAY TUNED</strong></p>
       <br><br><br>
       <p> <strong>Contact & Managing director</strong> <br> <a href="mailto:frida@miahabibproductions.com">frida@miahabibproductions.com</a></p>
     </div>

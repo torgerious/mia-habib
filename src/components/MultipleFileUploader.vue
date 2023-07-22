@@ -1,5 +1,5 @@
 <script lang="ts">
-import {Vue, Component, Emit} from 'vue-property-decorator';
+import {Vue, Component, Emit, Prop} from 'vue-property-decorator';
 import firebase from 'firebase/app'
 import 'firebase/storage'
 import { firestorePlugin } from 'vuefire'
@@ -8,6 +8,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 @Component({})
 export default class MultipleFileUploader extends Vue {
     @Action(actionStringImageGallery.POST_GALLERY_SLIDER) postGallerySlider: ((imageGallery: IimageGallery) => Promise<void>) | undefined;
+    @Prop() value: string | undefined;
 
     images:Array<any> = [];
     previewImages:Array<any> = [];
@@ -71,18 +72,21 @@ export default class MultipleFileUploader extends Vue {
 
             console.log("dafuq", this.uploadedUrls);
 
+            let payload: IimageGallery = {
+                imageGallery:this.uploadedUrls, title:this.value as string, created:"",
+            }
+
+
             if (this.postGallerySlider)
-                await this.postGallerySlider(this.uploadedUrls);
+                await this.postGallerySlider(payload);
+                this.$emit('success', 'Post gallery slider successful!'); // Emit the success event with the message
 
-
-            this.isLoading = false;
+                this.isLoading = false;
         }catch (e){
             this.isLoading = false;
         }
-
-
-
     }
+
 
     async uploadImages() {
         const storage = firebase.storage();
@@ -123,6 +127,7 @@ export default class MultipleFileUploader extends Vue {
 
 <template>
     <div>
+        <p>test {{value}}</p>
         <div class="drop-zone" ref="dropZone" @drop="onDrop" @dragover.prevent>
             <input type="file" multiple ref="fileInput" @change="onFileChange">
             <p v-if="!isDragging">{{ message }}</p>
