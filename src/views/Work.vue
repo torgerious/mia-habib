@@ -76,8 +76,10 @@ import firebase from "firebase";
             return;
           }
 
-            let prettyRoute = route.replace(/ /g,"-");
-            this.$router.push('article/' + prettyRoute);
+
+
+            // let prettyRoute = route.replace(/ /g,"-");
+            this.$router.push('article/' + route);
         }
 
         get selectedFilter():string{

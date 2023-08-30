@@ -22,6 +22,7 @@
     import HeaderBar from "@/components/HeaderBar.vue";
     import Loader from "@/components/loader.vue";
     import GallerySlider from "@/components/GallerySlider.vue";
+    import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 
     @Component({
         components: {GallerySlider, Loader, HeaderBar},
@@ -29,28 +30,66 @@
 
     export default class Article extends Vue {
         @Action(actionStringWork.GET_WORK_BY_ID) getWorkById: ((workId: string) => Promise<IWork>) | undefined;
+        @Action(actionStringImageGallery.GET_GALLERY_BY_ID) getGalleryById: ((galleryId: string) => Promise<IimageGallery>) | undefined;
 
-        images:Array<string> = [
-          'https://picsum.photos/id/1002/600/400',
-          'https://picsum.photos/id/1004/600/400',
-          'https://picsum.photos/id/1011/600/400'
-        ]
 
+
+        images:Array<string> | null = null
+        loading:boolean = false;
         $route: any;
         article:IWork | null = null;
 
 
 
         async created(): Promise<void> {
+            this.loading = true;
           console.log("YAKL")
             let articleId = this.$route.params.id;
-            let prettyRoute = articleId.replace(/-/g," ");
+            // console.log("original route", articleId);
+            //
+            // let prettyRoute = articleId.replace(/-/g," ");
+            //
+            // console.log("prettyRoute route", prettyRoute);
 
-            console.log(prettyRoute);
 
             if(this.getWorkById){
-                this.article = await this.getWorkById(prettyRoute);
+                this.article = await this.getWorkById(articleId);
             }
+
+            if(this.getGalleryById){
+                console.log("ARTICLE?", this.article)
+                let imageGallery = await this.getGalleryById(this.article?.imageGallerySlider as string)
+                console.log(imageGallery)
+                this.images = imageGallery.images as Array<string>;
+                console.log("images", this.images)
+            } else {
+                this.images = null;
+            }
+
+            this.loading = false;
+
+
+            if(!this.loading){
+                const qlSyntaxElement = document.querySelector(".ql-syntax");
+                const imageSliderElement = this.$el.querySelector(".image-slider");
+
+                console.log("QL", qlSyntaxElement)
+                console.log("IMS", imageSliderElement)
+
+
+                if (qlSyntaxElement && imageSliderElement) {
+                    qlSyntaxElement.appendChild(imageSliderElement);
+                }
+            }
+
+
+        }
+
+
+        mounted(): void {
+
+
+
         }
     }
 

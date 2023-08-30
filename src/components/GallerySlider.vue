@@ -1,22 +1,18 @@
 <template>
-<div class="gallery-slider">
-  <div class="slider-container">
-    <div class="slider" :style="{ transform: 'translateX(' + (-currentIndex * 33.4) + '%)' }">
-      <div class="slide" v-for="(image, index) in images" :key="index">
-        <img :src="image" alt="">
-      </div>
+    <div class="image-slider">
+        <div class="slider">
+            <div class="slide" v-for="(image, index) in images" :key="index" :style="{ transform: 'translateX(' + (-currentIndex * 100) + '%)' }">
+                <img :src="image" alt="">
+            </div>
+        </div>
+        <div class="slider-nav">
+            <button v-for="(image, index) in images" :key="index" @click="setCurrentIndex(index)" :class="{ active: currentIndex === index }">
+                {{ index + 1 }}
+            </button>
+        </div>
     </div>
-  </div>
-  <div class="slider-nav">
-    <button
-            v-for="(image, index) in images"
-            :key="index" @click="setCurrentIndex(index)"
-            :class="{ active: currentIndex === index }">
-        {{ index + 1 }}
-    </button>
-  </div>
-</div>
 </template>
+
 
 <script lang="ts">
 import {Component, Prop, Vue} from 'vue-property-decorator';
@@ -37,34 +33,39 @@ export default class HeaderBar extends Vue {
   }
 
 
+
+    get sliderContainerWidth(): any {
+      if(this.images)
+        return (this.images.length * 100) + '%';
+    }
+
+
 }
 
 </script>
 
 <style lang="scss" >
-.gallery-slider {
-  position: relative;
-  width: 100%;
-  height: 100%;
+.image-slider {
+  width: 600px;
+  height: 545px;
   overflow: hidden;
-}
-
-.slider-container {
   position: relative;
-  width: 100%;
-  height: 100%;
+  background: black;
+  align-items: center;
+  display: flex;
+    @media (max-width: 600px) {
+        width:400px;
+        margin:0 auto;
+    }
 }
 
 .slider {
   display: flex;
-  width: calc(100% * 3);
-  height: 100%;
   transition: transform 0.3s ease-in-out;
 }
 
 .slide {
-  width: calc(100% / 3);
-  height: 100%;
+  flex: 0 0 100%; /* Each slide takes up the full width of the slider */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -88,7 +89,7 @@ export default class HeaderBar extends Vue {
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1rem;
   margin: 0 5px;
   cursor: pointer;
   outline: none;

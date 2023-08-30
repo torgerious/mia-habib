@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Admin panel <span class="version">version 1.0.0</span></h1>
+        <h1>Admin panel <span class="version">version 1.0.4</span></h1>
 
 <!--      <button class="post-btn" @click="isShowingWorkForm = true">Artikkler</button>-->
 <!--      <button class="post-btn" @click="isShowingWorkForm = true">Kalender</button>-->
@@ -29,6 +29,15 @@
             <select v-model="selected">
                 <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
             </select>
+
+            <p>Velg et bildegalleri</p>
+            <select v-model="selectedGallery">
+                <option v-for="(slider, i) in gallerySlideList" :key="i" :value="slider.id">
+                    {{slider.title}}
+                </option>
+            </select>
+
+<!--              <button @click="postSelectedGal">test</button>-->
 
             <p>Last opp en fil / teknisk rider</p>
             <input type="file" @change="handleFileUpload">
@@ -78,7 +87,7 @@
         <div class="add-wrapper" v-if="isShowingGalleryForm">
             <div class="content">
                 <h3>Opprett nytt bildegalleri</h3>
-                <span @click="isShowingCalendarForm = false">Exit</span>
+                <span @click="isShowingGalleryForm = false">Exit</span>
 
                 <p>Galleri slider tittel</p>
                 <input type="text" placeholder="title" v-model="gallerySliderTitle">
@@ -167,6 +176,20 @@
           <select v-model="currentEditingArticle.category">
             <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
           </select>
+
+            <p>Bildegalleri</p>
+<!--            <select v-model="currentEditingArticle.imageGallerySlider">-->
+<!--                <option v-for="(slider, i) in gallerySlideList" :key="i">{{slider.title}}</option>-->
+<!--            </select>-->
+
+            <select v-model="selectedGallery" @change="handleGalleryChange">
+                <option v-for="(slider, i) in gallerySlideList" :key="i" :value="slider.id">
+                    {{slider.title}}
+                </option>
+            </select>
+
+<!--            <button @click="postSelectedGal">test</button>-->
+
 
           <input type="file" @change="onFileSelectIngress">
           <div v-if="currentEditingArticle.category !== 'films'">
@@ -284,6 +307,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         isShowingWorkForm:boolean = false;
         localCategory:Category[] = category;
         selected:Category = Category.projects;
+        selectedGallery:string = "";
         title:string = "";
         content:any = null;
         previewImageUrl:string = "";
@@ -384,6 +408,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
             if(this.getWorkById){
               let editingArticle = await this.getWorkById(workId);
               this.currentEditingArticle = editingArticle;
+              this.selectedGallery = editingArticle.imageGallerySlider as string
               console.log("Article to edit", editingArticle);
             }
         }
@@ -532,6 +557,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
               imageIngressUrl:downloadURL,
               markedForPreview:this.markedForPreview,
               rider:technicalRiderDownloadURL,
+              imageGallerySlider:this.selectedGallery
 
             };
 
@@ -629,25 +655,39 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
     }
 
 
+    handleGalleryChange():void{
+      console.log(this.selectedGallery);
+
+      if(this.currentEditingArticle){
+        this.currentEditingArticle.imageGallerySlider = this.selectedGallery;
+      }
+    }
+
     async fetchGallerySlider():Promise<void>{
-        if(this.getGallerySlider){
+        if (this.getGallerySlider) {
             this.loading = true;
-            this.getGallerySlider().then(res => {
+            try {
+                const res = await this.getGallerySlider();
                 this.loading = false;
-
-                const sorted = res.sort((a, b) => {
-                    const dateA = new Date(a.created.seconds * 1000 + a.created.nanoseconds / 1000000);
-                    const dateB = new Date(b.created.seconds * 1000 + b.created.nanoseconds / 1000000);
-                    return dateB - dateA;
-                });
-
-                this.gallerySlideList = sorted;
-
+                //
+                // // Create a copy of the res array and sort the copy
+                // const sorted = [...res].sort((a: any, b: any) => {
+                //     const dateA: any = new Date(a.created.seconds * 1000 + a.created.nanoseconds / 1000000);
+                //     const dateB: any = new Date(b.created.seconds * 1000 + b.created.nanoseconds / 1000000);
+                //     return dateB - dateA;
+                // });
 
 
-            }).catch(err => {
+                this.gallerySlideList = res;
+
+                console.log("wtf", this.gallerySlideList)
+
+
+
+
+            } catch (err) {
                 this.loading = false;
-            })
+            }
         }
     }
 

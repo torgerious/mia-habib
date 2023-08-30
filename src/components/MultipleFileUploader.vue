@@ -70,7 +70,6 @@ export default class MultipleFileUploader extends Vue {
 
             await this.uploadImages();
 
-            console.log("dafuq", this.uploadedUrls);
 
             let payload: IimageGallery = {
                 imageGallery:this.uploadedUrls, title:this.value as string, created:"",

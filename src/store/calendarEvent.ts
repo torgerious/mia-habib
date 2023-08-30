@@ -55,11 +55,8 @@ export const actions: ActionTree<CalendarEventState, any> = {
             DB.collection("calendarEvent").get().then((doc) => {
                 doc.forEach(res => {
                     let event: Partial<ICalendarEvent> = res.data();
-                    console.log("data",event);
-                    console.log("res",res.id);
                     let formattedDate = formatDate(event.date as string, FormatSpaceType.IGNORE, true);
                     let dateAsTimestamp = Date.parse(<string>event.date)
-                    console.log("Date", dateAsTimestamp);
                     let newCalendarEvent = {id:res.id, text: event.text, title: event.title, date:formattedDate, timestamp:dateAsTimestamp};
                     calendarEvents.push(newCalendarEvent as unknown as ICalendarEvent);
                 });

@@ -6,6 +6,7 @@ export interface IimageGallery{
     imageGallery:Array<string>
     title:string,
     created:string | Date,
+    id?:string
 }
 interface ImageGalleryState{
     imageGallery: IimageGallery | null
@@ -19,6 +20,7 @@ export const state:ImageGalleryState = {
 export const enum actionStringImageGallery{
     POST_GALLERY_SLIDER = 'postGallerySlider',
     GET_GALLERY_SLIDER = 'getGallerySlider',
+    GET_GALLERY_BY_ID = 'getGalleryById'
 }
 
 export const actions: ActionTree<ImageGalleryState, any> = {
@@ -42,31 +44,49 @@ export const actions: ActionTree<ImageGalleryState, any> = {
             })
         })
     },
-    getGallerySlider({commit}): Promise<IimageGallery[]> {
+    getGallerySlider({ commit }): Promise<Partial<IimageGallery>[]> {
         return new Promise((resolve, reject) => {
+            let imageGallery: Partial<IimageGallery>[] = [];
 
-            let imageGallery: IimageGallery[] = [];
+            DB.collection("imageGallery")
+                .get()
+                .then((snapshot) => {
+                    snapshot.forEach((doc) => {
+                        let gallery: Partial<IimageGallery> = {
+                            id: doc.id, // Add the document ID to the gallery object
+                            ...doc.data(),
+                        };
+                        imageGallery.push(gallery);
+                    });
 
-            DB.collection("imageGallery").get().then((doc) => {
-                doc.forEach(res => {
-                    let gallery: Partial<IimageGallery> = res.data();
-                    console.log("data", gallery);
-                    imageGallery.push(gallery as unknown as IimageGallery);
+                    resolve(imageGallery);
+                })
+                .catch((err) => {
+                    reject(err);
                 });
-
-
-
-                resolve(imageGallery);
-
-            }).catch((err) => {
-                reject(err);
-                reject("error");
-
-            });
-
         });
-
-
+    },
+    getGalleryById({ commit }, galleryId): Promise<Partial<IimageGallery>> {
+        console.log("GL ID", galleryId)
+        return new Promise((resolve, reject) => {
+            DB.collection("imageGallery")
+                .doc(galleryId)
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const gallery: Partial<IimageGallery> = {
+                            id: doc.id,
+                            ...doc.data(),
+                        };
+                        resolve(gallery);
+                    } else {
+                        reject(new Error("Gallery not found"));
+                    }
+                })
+                .catch((err) => {
+                    reject(err);
+                });
+        });
     },
 
 }

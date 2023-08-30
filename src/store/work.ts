@@ -18,6 +18,7 @@ export interface IWork{
     markedForPreview:boolean,
     rider?:string,
     created?:Date | string,
+    imageGallerySlider?: string,
 }
 
 export enum Category {
@@ -162,7 +163,8 @@ export const actions: ActionTree<WorkState, any> = {
                         content:work.content,
                         imageIngressUrl:work.imageIngressUrl,
                         markedForPreview:work.markedForPreview,
-                        rider:work.rider
+                        rider:work.rider,
+                        imageGallerySlider: work.imageGallerySlider,
                     };
 
                     workList.push(newWork as IWork);
@@ -196,6 +198,7 @@ export const actions: ActionTree<WorkState, any> = {
             markedForPreview: newWork.markedForPreview,
             rider:newWork.rider,
             created:currentDateString,
+            imageGallerySlider:newWork.imageGallerySlider
         }).then((res: any) => {
             resolve(res);
             dispatch(actionStringWork.GET_WORK);
@@ -218,6 +221,7 @@ export const actions: ActionTree<WorkState, any> = {
     updateWork({commit, state, dispatch}, payload:IWork):Promise<IWork>{
         return new Promise((resolve, reject) => {
 
+            console.log("payload", payload)
             DB.collection("work").doc(payload.id as string).set({
                 imageUrl:payload.imageUrl,
                 title:payload.title,
@@ -225,6 +229,7 @@ export const actions: ActionTree<WorkState, any> = {
                 content:payload.content,
                 imageIngressUrl:payload.imageIngressUrl,
                 markedForPreview:payload.markedForPreview,
+                imageGallerySlider:payload.imageGallerySlider,
                 },
                 { merge: true }).then(function(doc:any){
                 dispatch(actionStringWork.GET_WORK);
