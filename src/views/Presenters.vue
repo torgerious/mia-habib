@@ -2,18 +2,18 @@
   <div>
     <header-bar :has-background="true"></header-bar>
     <div  class="page">
-      <h1>Presenters </h1>
-      <p>Request password to get access. Send mail to test@mail.no for more info</p>
-      <div class="form">
-        <p class="input-description">Skriv inn passord for å få tilgang</p>
-        <input v-model="input" type="password" placeholder="password">
-        <button @click="access">Login</button>
-      </div>
+      <h1>Presenters <br><br> Under constructions👷‍♂️ </h1>
+<!--      <p>Request password to get access. Send mail to test@mail.no for more info</p>-->
+<!--      <div class="form">-->
+<!--        <p class="input-description">Skriv inn passord for å få tilgang</p>-->
+<!--        <input v-model="input" type="password" placeholder="password">-->
+<!--        <button @click="access">Login</button>-->
+<!--      </div>-->
 
-      <div v-if="hasAccess" class="content">
-        <p>Welcome to the content</p>
+<!--      <div v-if="hasAccess" class="content">-->
+<!--        <p>Welcome to the content</p>-->
 
-      </div>
+<!--      </div>-->
 
 
     </div>

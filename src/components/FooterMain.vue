@@ -2,29 +2,38 @@
     <footer>
         <div class="content">
           <div class="left">
-            <h2>Mia habib productions</h2>
-            <p>Mia Haugland Habib | Artistic Director & choreographer</p>
-            <div class="line"></div>
+            <h2>Mia Habib production</h2>
+              <h3>Contact info</h3>
+<!--            <p>Mia Haugland Habib | Artistic Director & choreographer</p>-->
+<!--            <div class="line"></div>-->
             <br>
-            <img src="about-mia.jpg" alt="mia" >
+<!--            <img src="about-mia.jpg" alt="mia" >-->
 
           </div>
 
           <div class="right">
 
-            <facebook-icon></facebook-icon>
-            <instagram-icon></instagram-icon>
+<!--            <facebook-icon></facebook-icon>-->
+<!--            <instagram-icon></instagram-icon>-->
           </div>
 
         </div>
       <div class="contact">
         <p>
-          miahabib@gmail.com<br>
+            <p>Mia Haugland Habib | Artistic Director & choreographer<br>
+                <div class="line"></div>
+
+            mia@miahabibproductions.com<br>
           +47 90 16 88 82
         </p>
+
+            <br>
+
         <p>
-          Grethe Henden| Producer and general manager for Mia Habib Productions<br>
-          +47 95 24 57 47
+          Frida Skinner | Managing Director and producer <br>
+            <div class="line"></div>
+          frida@miahabibproductions.com<br>
+          +47 48 28 97 88
         </p>
       </div>
 <!--      <div class="copyright">-->
@@ -55,6 +64,15 @@
 
 <style lang="scss" scoped>
     footer{
+
+      .line{
+        width: 40px;
+        height: 3px;
+        border-radius: 2px;
+        background: #eeb1a6;
+        margin-top: -11px;
+      }
+
         //background: #fafafa;
         color:#333;
         width: 100%;
@@ -75,6 +93,7 @@
             .left{
               text-align: left;
               width:50%;
+
               @media only screen and (max-width: 800px) {
                 width: 100%;
                 display: block;
@@ -99,7 +118,7 @@
               justify-content: flex-end;
               align-items: center;
               @media only screen and (max-width: 800px) {
-                idth: 100%;
+                width: 100%;
                 display: flex;
                 justify-content: start;
                 margin-top: 17px;
@@ -113,10 +132,12 @@
           justify-content: center;
           padding: 20px 0;
           margin: 0 auto;
+          margin-top: -80px;
           @media only screen and (max-width: 800px) {
             width:95%;
             margin:0 2.5%;
             display: block;
+            margin-top: -90px;
           }
           //border-top: 2px solid #f0f0f0;
         }

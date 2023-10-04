@@ -28,7 +28,7 @@
                 <p @click="navigate('work?filter=projects')">Projects</p>
                 <p @click="navigate('work?filter=publications')">Publications</p>
                 <p @click="navigate('work?filter=films')">Films</p>
-                <p @click="navigate('press')">Press</p>
+<!--                <p @click="navigate('press')">Press</p>-->
                 <p @click="navigate('calendar')">Calendar</p>
                 <p @click="navigate('people')">People</p>
                 <p @click="navigate('presenters')">Presenters</p>

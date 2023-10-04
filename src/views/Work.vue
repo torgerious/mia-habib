@@ -29,7 +29,7 @@
                              v-if="item.category === selectedFilter || selectedFilter === ''"
                              @click="navigate(item.title, item.category)">
                         <span v-if="item.markedForPreview">Forhåndsvisning 🔒</span>
-                        <img v-if="item.category !== 'films'" loading=lazy :src="item.imageIngressUrl" alt="ingress">
+                        <img v-if="item.category !== 'films'" :src="item.imageIngressUrl" alt="ingress">
                         <video v-else :src="item.imageIngressUrl" controls></video>
                       <h4> {{item.title}}</h4>
                     </article>
@@ -57,7 +57,9 @@ import firebase from "firebase";
     })
 
     export default class Work extends Vue {
-        @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
+        // @Action(actionStringWork.GET_WORK) getWork: (() => Promise<IWork[]>) | undefined;
+        @Action(actionStringWork.GET_SORTED_WORK) getSortedWork: (() => Promise<IWork[]>) | undefined;
+
 
         work:IWork[] = [];
         selectedCategory:Category = Category.all;
@@ -113,14 +115,25 @@ import firebase from "firebase";
 
         created(): void {
 
-            if(this.getWork){
+            if(this.getSortedWork){
                 this.loading = true;
-                this.getWork().then(res => {
+                this.getSortedWork().then(res => {
                     console.log("work res", res);
 
 
 
                     const workWithoutPreviewArticles = res.filter(work =>  !work.markedForPreview);
+
+                    // const sorted = workWithoutPreviewArticles.slice().sort((a, b) => {
+                    //     const priorityA = a.priority || 0; // Use 0 as the default value if 'priority' is undefined
+                    //     const priorityB = b.priority || 0;
+                    //
+                    //     return priorityB - priorityA; // Sort in descending order
+                    // });
+
+
+
+
 
 
                   firebase.auth().onAuthStateChanged((user) => {
@@ -128,8 +141,8 @@ import firebase from "firebase";
                       this.work = res;
                     } else {
                       this.work = workWithoutPreviewArticles;
-
                     }
+
                   });
 
 

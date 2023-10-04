@@ -14,7 +14,7 @@
     </div>
     <br>
     <div class="work-header">
-      <h2>My work</h2>
+      <h2>Work</h2>
       <div class="line"></div>
     </div>
     <loader v-if="loading"></loader>
@@ -63,12 +63,15 @@ interface IArticle{
 
 export default class Home extends Vue {
   workList:IWork[] = [];
-  projectLinks:Array<string> = ["How to die", "Stranger within", "Another random"];
-  projectLinksURL:Array<string> = ["/article/How-to-die", "/article/Stranger-within", "Another random"];
+  projectLinks:Array<string> = ["How to die", "Stranger within", "Photo: Yaniv Cohen"];
+  projectLinksURL:Array<string> = [
+      "/article/How%20to%20Die%20-%20Inopin%C3%A9%20Publication",
+      "/article/Stranger%20Within%20Hedmark",
+      "#"];
   currentProjectLink:string = this.projectLinks[0];
   currentProjectLinkURL:string = this.projectLinksURL[0];
 
-  backgroundImages:Array<string> = ["mia-habib.jpeg", "mia-4.jpg", "mia-6.jpg"];
+  backgroundImages:Array<string> = ["mia-habib.jpeg", "mia-4.jpg", "https://firebasestorage.googleapis.com/v0/b/mia-habib-f9b6c.appspot.com/o/mihabibproductions.jpg?alt=media&token=8e5989d9-c3a6-43b5-b206-8911427fef0c"];
   backgroundImageIndex:number = 0;
   loading:boolean = false;
 
@@ -111,8 +114,8 @@ export default class Home extends Vue {
       return;
     }
 
-    let prettyRoute = route.replace(/ /g,"-");
-    this.$router.push('article/' + prettyRoute);
+    // let prettyRoute = route.replace(/ /g,"-");
+    this.$router.push('article/' + route);
   }
 
 

@@ -15,7 +15,7 @@ import Construction from "@/views/Construction.vue";
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
-  { path: '/', name: 'construction', component: Construction },
+  { path: '/', name: 'Home', component: Home },
   { path: '/work', name: 'Work', component: Work },
   { path: '/login', name: 'Login', component: Login},
   { path: '/profile', name: 'profile', component: Profile},

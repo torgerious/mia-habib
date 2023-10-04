@@ -3,9 +3,9 @@
 
 import {Category} from "@/store/work";
 
-export const category:Category[] = [Category.all, Category.projects, Category.performances, Category.films, Category.publications, Category.interview, Category.media, Category.reviews];
-export const workCategory:Category[] = [Category.all, Category.projects, Category.performances, Category.films, Category.publications];
-export const pressCategory:Category[] = [ Category.media, Category.interview, Category.reviews];
+export const category:Category[] = [Category.all,  Category.performances, Category.films, Category.publications, Category.archive];
+export const workCategory:Category[] = [Category.all, Category.performances, Category.publications, Category.films, Category.archive];
+// export const pressCategory:Category[] = [ Category.media, Category.interview, Category.reviews];
 export const noMediaToolbar = [
     [{ header: [false, 1, 2, 3, 4, 5, 6] }],
     ["bold", "italic", "underline", "strike"], // toggled buttons

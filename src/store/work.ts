@@ -4,6 +4,7 @@ import {category} from "@/Types/Types";
 import {actionStringCalendarEvent} from "@/store/calendarEvent";
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import {actionStringImageGallery} from "@/store/imageGallery";
 
 export interface WorkState {
     work:IWork[] | null
@@ -19,17 +20,20 @@ export interface IWork{
     rider?:string,
     created?:Date | string,
     imageGallerySlider?: string,
+    relatedArticles?:Array<string>
+    priority?:number,
 }
 
 export enum Category {
-    all = "all topics",
+    all = "all projects",
     performances = "performances",
-    projects = "projects",
+    // projects = "projects",
     publications = "publications",
     films = "films",
-    interview = "interview",
-    media = "media",
-    reviews = "reviews",
+    // interview = "interview",
+    // media = "media",
+    // reviews = "reviews",
+    archive = "archive",
     blank = "",
 }
 
@@ -44,7 +48,9 @@ export const enum actionStringWork{
     POST_WORK = 'postWork',
     UPDATE_WORK = 'updateWork',
     GET_WORK_BY_ID = 'getWorkById',
-    DELETE_WORK_BY_ID = 'deleteWorkById'
+    DELETE_WORK_BY_ID = 'deleteWorkById',
+    DELETE_GALLERY_BY_ID = 'deleteGalleryById',
+    GET_SORTED_WORK = 'getSortedWork'
 }
 export const enum getterStringWork{
     WORK = 'work'
@@ -60,18 +66,7 @@ export const getters: GetterTree<WorkState, any> = {
 
 export const mutations: MutationTree<any> = {
     setWork(state, payload:IWork[]){
-
-
-        //ORDER BY DATE
-        payload.sort((a, b) => {
-            // @ts-ignore
-            const dateA = new Date(a.created).getTime();
-            // @ts-ignore
-            const dateB = new Date(b.created).getTime();
-            return dateB - dateA; // sort by newest to oldest date
-        });
-
-        state.work = payload;
+            state.work = payload;
     }
 };
 
@@ -86,24 +81,68 @@ export const actions: ActionTree<WorkState, any> = {
                 doc.forEach(res => {
                     let work: Partial<IWork> = res.data();
 
-                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl, markedForPreview:work.markedForPreview, created:work.created};
+                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl, markedForPreview:work.markedForPreview, created:work.created, priority: work.priority};
 
                     workList.push(newContact as IWork);
                 });
 
-               // const test =  workList.sort((a, b) => {
-               //      // @ts-ignore
-               //      const dateA = new Date(b.created).getTime();
-               //      // @ts-ignore
-               //      const dateB = new Date(a.created).getTime();
-               //      return dateB - dateA; // sort by newest to oldest date
-               //  });
-
-               // console.log("order?", test);
 
 
+                //
+                // console.log("before sort", workList)
+                // workList[4].priority = 0;
+                // workList[5].priority = 1;
+                // // @ts-ignore
+                // workList.sort((a, b) => a.priority - b.priority);
+                //
+                //
+                //     console.log("after sort", workList)
+                //
+                //     commit(mutationStringWork.SET_WORK, workList);
+                //
+                //     resolve(workList);
+
+            }).catch((err) => {
+                reject(err);
+                reject("error");
+            });
+
+            //
+            // if (workList[4].priority){
+            //     workList[4].priority = 0;
+            // }
+            // console.log("AFT", workList)
 
 
+            // @ts-ignore
+            // workList.sort((a, b) =>  b.priority - a.priority);
+
+
+            commit(mutationStringWork.SET_WORK, workList);
+
+            resolve(workList);
+        });
+
+
+    },
+
+
+    getSortedWork({commit}): Promise<IWork[]> {
+        return new Promise((resolve, reject) => {
+
+            let workList: IWork[] = [];
+
+            DB.collection("work").orderBy("priority", "desc").get().then((doc) => {
+                doc.forEach(res => {
+                    let work: Partial<IWork> = res.data();
+
+                    let newContact = {id:res.id, imageUrl: work.imageUrl, title: work.title, content:work.content, category:work.category, imageIngressUrl:work.imageIngressUrl, markedForPreview:work.markedForPreview, created:work.created, priority: work.priority};
+
+                    workList.push(newContact as IWork);
+                });
+
+
+                workList.reverse()
                 commit(mutationStringWork.SET_WORK, workList);
                 resolve(workList);
 
@@ -111,12 +150,18 @@ export const actions: ActionTree<WorkState, any> = {
                 reject(err);
                 reject("error");
 
-            });
 
+            });
+            //
+            //
+            // commit(mutationStringWork.SET_WORK, workList);
+            //
+            // resolve(workList);
         });
 
 
     },
+
 
     getLatestWork({commit}): Promise<IWork[]> {
         return new Promise((resolve, reject) => {
@@ -131,7 +176,6 @@ export const actions: ActionTree<WorkState, any> = {
                     workList.push(newContact as IWork);
                 });
 
-
                 commit(mutationStringWork.SET_WORK, workList);
                 resolve(workList);
 
@@ -146,12 +190,13 @@ export const actions: ActionTree<WorkState, any> = {
 
     },
 
-    getWorkById({commit, dispatch}, workId:string):Promise<IWork>{
+    async getWorkById({commit, dispatch}, workId:string):Promise<IWork>{
         return new Promise((resolve, reject) => {
             let workList: IWork[] = [];
             DB.collection("work").where("title", "==", workId).get().then((doc:any) => {
                 doc.forEach((res: { data: () => Partial<IWork>; id: any; }) => {
                     let work: Partial<IWork> = res.data();
+                    console.log("work", work)
 
 
 
@@ -165,6 +210,8 @@ export const actions: ActionTree<WorkState, any> = {
                         markedForPreview:work.markedForPreview,
                         rider:work.rider,
                         imageGallerySlider: work.imageGallerySlider,
+                        relatedArticles: work.relatedArticles,
+                        priority: work.priority,
                     };
 
                     workList.push(newWork as IWork);
@@ -186,7 +233,6 @@ export const actions: ActionTree<WorkState, any> = {
             let currentDate = new Date();
             let currentDateString = currentDate.toISOString();
 
-            console.log("currentDateString", currentDateString)
 
 
         DB.collection("work").doc().set({
@@ -198,7 +244,9 @@ export const actions: ActionTree<WorkState, any> = {
             markedForPreview: newWork.markedForPreview,
             rider:newWork.rider,
             created:currentDateString,
-            imageGallerySlider:newWork.imageGallerySlider
+            imageGallerySlider:newWork.imageGallerySlider,
+            relatedArticles:newWork.relatedArticles,
+            priority:newWork.priority,
         }).then((res: any) => {
             resolve(res);
             dispatch(actionStringWork.GET_WORK);
@@ -215,13 +263,27 @@ export const actions: ActionTree<WorkState, any> = {
             resolve(res);
             dispatch(actionStringWork.GET_WORK);
         })
-
+    },
+    deleteGalleryById({dispatch}, workId:string):Promise<any>{
+        return new Promise(async (resolve) => {
+            const res = await DB.collection('imageGallery').doc(workId).delete();
+            console.log("delete res", res);
+            resolve(res);
+        })
     },
 
     updateWork({commit, state, dispatch}, payload:IWork):Promise<IWork>{
+
+        payload.priority = parseInt(payload.priority as any, 10);
+        console.log(payload)
         return new Promise((resolve, reject) => {
 
-            console.log("payload", payload)
+            if(!payload.relatedArticles){
+                payload.relatedArticles = [];
+            }
+
+
+
             DB.collection("work").doc(payload.id as string).set({
                 imageUrl:payload.imageUrl,
                 title:payload.title,
@@ -230,6 +292,8 @@ export const actions: ActionTree<WorkState, any> = {
                 imageIngressUrl:payload.imageIngressUrl,
                 markedForPreview:payload.markedForPreview,
                 imageGallerySlider:payload.imageGallerySlider,
+                relatedArticles: payload.relatedArticles,
+                priority:payload.priority
                 },
                 { merge: true }).then(function(doc:any){
                 dispatch(actionStringWork.GET_WORK);

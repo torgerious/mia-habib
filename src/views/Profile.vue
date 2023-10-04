@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Admin panel <span class="version">version 1.0.4</span></h1>
+        <h1>Admin panel <span class="version">version 1.0.12</span></h1>
 
 <!--      <button class="post-btn" @click="isShowingWorkForm = true">Artikkler</button>-->
 <!--      <button class="post-btn" @click="isShowingWorkForm = true">Kalender</button>-->
@@ -27,8 +27,12 @@
 
             <p>Kattegori</p>
             <select v-model="selected">
-                <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
+                <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all projects'">{{cate}}</option>
             </select>
+
+
+            <p>Prioriter rekkefølge (1 = øverst)</p>
+            <input type="number" placeholder="Prioritet" v-model="priority">
 
             <p>Velg et bildegalleri</p>
             <select v-model="selectedGallery">
@@ -37,7 +41,14 @@
                 </option>
             </select>
 
-<!--              <button @click="postSelectedGal">test</button>-->
+
+              <p>Velg relaterte artikler (CTRL / CMD  + klikk) for å velge flere</p>
+              <select class="related-articles" v-model="selectedRelatedArticles" multiple>
+                  <option v-for="(slider, i) in work" :key="i" :value="slider.title">
+                      {{ slider.title }}
+                  </option>
+              </select>
+
 
             <p>Last opp en fil / teknisk rider</p>
             <input type="file" @change="handleFileUpload">
@@ -107,7 +118,7 @@
 
         <!-- POSTS -->
         <div class="list-header" v-if="activeTab === 1">
-          <button class="add" @click="isShowingWorkForm = true">legg til ny +</button>
+          <button class="add" @click="addNew">legg til ny +</button>
           <p v-if="activeTab === 1">Articles </p>
         </div>
         <!--FILTER-->
@@ -127,7 +138,7 @@
                     v-for="(item, i) in work"
                     v-if="item.category === selectedFilter || selectedFilter === ''"
                     @click="navigate(item.title)">
-                <img v-if="item.category !== 'films'" loading=lazy :src="item.imageIngressUrl" alt="ingress">
+                <img v-if="item.category !== 'films'"  :src="item.imageIngressUrl" alt="ingress">
                 <img v-else loading=lazy src="video.svg" alt="video">
 
                 <h4> {{item.title.substring(0,10)+".." }}</h4>
@@ -172,19 +183,26 @@
           <p>Tittel</p>
           <input type="text" placeholder="title" v-model="currentEditingArticle.title">
 
+            <p>Prioritet rekkefølge (1 = øverst)</p>
+            <input type="number" placeholder="Prioritet" v-model="currentEditingArticle.priority">
+
           <p>Kattegori</p>
           <select v-model="currentEditingArticle.category">
             <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
           </select>
 
             <p>Bildegalleri</p>
-<!--            <select v-model="currentEditingArticle.imageGallerySlider">-->
-<!--                <option v-for="(slider, i) in gallerySlideList" :key="i">{{slider.title}}</option>-->
-<!--            </select>-->
-
             <select v-model="selectedGallery" @change="handleGalleryChange">
                 <option v-for="(slider, i) in gallerySlideList" :key="i" :value="slider.id">
                     {{slider.title}}
+                </option>
+            </select>
+
+
+            <p>Velg relaterte artikler (CTRL / CMD  + klikk) for å velge flere</p>
+            <select class="related-articles" v-model="selectedRelatedArticles"  @change="handleRelatedArticleChange" multiple>
+                <option v-for="(slider, i) in work" :key="i" :value="slider.title">
+                    {{ slider.title }}
                 </option>
             </select>
 
@@ -193,8 +211,13 @@
 
           <input type="file" @change="onFileSelectIngress">
           <div v-if="currentEditingArticle.category !== 'films'">
-            <img class="preview-image" v-if="previewIngressImageUrl !== ''" :src="previewIngressImageUrl"  alt="random">
-            <img class="preview-image" v-else :src="currentEditingArticle.imageIngressUrl"  alt="random">
+              <template v-if="previewIngressImageUrl !== ''">
+                  <p>ny thumbnail</p>
+                <img class="preview-image"  :src="previewIngressImageUrl"  alt="random">
+              </template>
+              <template v-else>
+                <img class="preview-image" :src="currentEditingArticle.imageIngressUrl"  alt="random">
+              </template>
               <h1>hello</h1>
           </div>
           <div v-else>
@@ -251,7 +274,7 @@
                 <div class="image-list">
                   <img  v-for="img in item.images" :src="img"  :alt="item.title"/>
                 </div>
-                <button @click="editCalendarEvent(item.id)">Edit</button>
+                <button @click="deleteGallerySlider(item.id)">Slett</button>
             </article>
         </div>
 
@@ -292,6 +315,8 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         @Action(actionStringCalendarEvent.GET_CALENDAR_EVENTS_BY_ID) getCalendarEventsById:((calendarId:string) => Promise<ICalendarEvent>) | undefined;
         @Action(actionStringCalendarEvent.DELETE_CALENDAR_EVENT) deleteCalendarEvent:((calendarId:string) => Promise<any>) | undefined;
         @Action(actionStringWork.DELETE_WORK_BY_ID) deleteWorkById:((workId:string) => Promise<any>) | undefined;
+        @Action(actionStringWork.DELETE_GALLERY_BY_ID) deleteGalleryById:((id:string) => Promise<any>) | undefined;
+
         @Action(actionStringImageGallery.POST_GALLERY_SLIDER) postGallerySlider: ((imageGallery: IimageGallery) => Promise<void>) | undefined;
         @Action(actionStringImageGallery.GET_GALLERY_SLIDER) getGallerySlider: (() => Promise<IimageGallery[]>) | undefined;
 
@@ -306,7 +331,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         $router: any;
         isShowingWorkForm:boolean = false;
         localCategory:Category[] = category;
-        selected:Category = Category.projects;
+        selected:Category = Category.performances;
         selectedGallery:string = "";
         title:string = "";
         content:any = null;
@@ -315,7 +340,6 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         selectedIngressFile:File | null | Blob = null;
         selectedIngressFileName:string = "";
         selectedCategory:Category = Category.all;
-        // localCategory:Category[] = category;
         selectedCategoryFilter:Category = Category.blank;
         isEditingArticle:boolean = false;
         previewIngressImageUrl:string = "";
@@ -333,6 +357,14 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         markedForPreview:boolean = false;
         isEditingThumbnail:boolean = false
         gallerySlideList:IimageGallery[] = [];
+        selectedRelatedArticles:any = [];
+        priority:number = 0;
+
+
+        addNew(){
+            this.previewIngressImageUrl = "";
+            this.isShowingWorkForm = true
+        }
 
   setCategory(category:Category):void{
     this.selectedCategory = category;
@@ -403,12 +435,29 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         }
 
         async editArticle(workId:string):Promise<void>{
+
+
+
+            this.previewIngressImageUrl = "";
+            this.isEditingThumbnail = false;
+
+
+
+            // this.previewImageUrl = "";
             this.isEditingArticle = true;
+
 
             if(this.getWorkById){
               let editingArticle = await this.getWorkById(workId);
+              console.log("editingArticle", editingArticle)
               this.currentEditingArticle = editingArticle;
+              // this.previewIngressImageUrl = this.currentEditingArticle.imageIngressUrl;
+              //   this.imageIngressUrl
               this.selectedGallery = editingArticle.imageGallerySlider as string
+              if(editingArticle?.relatedArticles.length > 0){
+                  this.selectedRelatedArticles = await this.fetchWorkForIds(editingArticle?.relatedArticles)
+              }
+
               console.log("Article to edit", editingArticle);
             }
         }
@@ -428,6 +477,11 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 
 
         }
+
+
+
+
+
 
       async editCalendarEvent(eventId:string):Promise<void>{
         console.log("ID", eventId);
@@ -540,7 +594,29 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
             this.selectedIngressFile = null;
             this.selectedIngressFileName = "";
             this.markedForPreview = false;
+            this.selectedRelatedArticles = [];
+            this.priority = 0;
         }
+
+    async  fetchWorkForIds(Ids:Array<string>) {
+        const responseArray = [];
+
+        for (const id of Ids) {
+            console.log("IDS", id)
+
+            try {
+                if(this.getWorkById){
+                    const res = await this.getWorkById(id)
+                    console.log("RES", res)
+                    responseArray.push(res);
+                }
+            } catch (error) {
+                console.error(`Error fetching data for ID ${id}:`, error);
+            }
+        }
+
+        return responseArray;
+    }
 
 
 
@@ -557,8 +633,9 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
               imageIngressUrl:downloadURL,
               markedForPreview:this.markedForPreview,
               rider:technicalRiderDownloadURL,
-              imageGallerySlider:this.selectedGallery
-
+              imageGallerySlider:this.selectedGallery,
+              relatedArticles: this.selectedRelatedArticles,
+              priority: this.priority
             };
 
             if(this.postWork) {
@@ -636,6 +713,21 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
           }
         }
 
+
+    async deleteGallerySlider(id:string):Promise<void>{
+        let txt;
+        let deleteChoice = confirm("Are you sure you want to delete this slider?");
+        if (deleteChoice) {
+
+            if(this.deleteGalleryById){
+                let res = await this.deleteGalleryById(id);
+                await this.fetchGallerySlider();
+            }
+        } else {
+            console.log("You pressed Cancel")
+        }
+    }
+
       async addCalendarEvent():Promise<void>{
         let calendarEventToBePosted:ICalendarEvent = {title:this.calendarTitle, date:this.calendarDate, text:this.calendarText};
         if(this.postCalendarEvent){
@@ -653,7 +745,15 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         //     console.log("the res", res);
         // }
     }
+    handleRelatedArticleChange():void{
+      console.log("Running..", this.selectedRelatedArticles)
+        if(this.currentEditingArticle){
+            this.currentEditingArticle.relatedArticles = this.selectedRelatedArticles;
+        }
 
+        console.log("Running..", this.currentEditingArticle)
+
+    }
 
     handleGalleryChange():void{
       console.log(this.selectedGallery);
@@ -739,6 +839,10 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
 </script>
 
 <style lang="scss" scoped>
+
+.related-articles{
+  height: 100px !important;
+}
 
 .version{
   color:gray;
@@ -885,7 +989,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         color: #333;
         border: 1px solid #333;
       }
-      input[type=date] {
+      input[type=date], input[type=number] {
         width: 40%;
         margin: 5px 50% 0% 10%;
         height: 30px;

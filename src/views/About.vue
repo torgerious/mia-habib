@@ -1,54 +1,50 @@
 <template>
-  <div>
-    <header-bar :has-background="true"></header-bar>
-    <div  class="page">
-      <h1 class="main-header">About </h1>
+    <div>
+        <header-bar :has-background="true"></header-bar>
+        <div  class="page">
+            <h1 class="main-header">About</h1>
 
-      <div class="content">
-        <br>
-        <div class="img-wrap">
-          <img src="about-mia.jpg" alt="mia" >
+            <div class="content">
+                <br>
+                <div class="img-wrap">
+                    <img src="about-mia.jpg" alt="mia" >
+                </div>
+                <div class="text">
+                    <p>Mia Habib Productions (MHP) is a Norwegian non-profit association, founded and directed by Mia Habib. The association is supported by Arts Council Norway and currently MHP has the temporary four year grant- Kunstnerskapsstøtte.</p>
+                    <p>The company's founder and artistic director, Mia Habib (*1980, Houston, Texas) is an Oslo-based dancer, performer and choreographer working at the intersection of performance, exhibitions, publications, lectures, teaching, mentoring and curating. Habib holds an M.A in conflict resolution and mediation from Tel Aviv University (2011) and a B.A. in choreography and dance pedagogy from the Oslo National Academy of the Arts (2003).</p>
+                    <p>She is a former member of the board of The Norwegian Opera and Ballet, a former member of the Artistic council at theater Kloden, and a former board member of Performing Arts Hub Norway.</p>
+                    <!-- Add more paragraphs as needed -->
+
+                </div>
+            </div>
+
+            <div class="text-full">
+                <p>Over the last 20 years Mia Habib’ work and research has, with Mia Habib Productions and her team of collaborators, been entering into different contexts ranging from dance houses, opera stages and galleries to public spaces, private houses, religious buildings, squats, contexts of protest and areas of conflict, the world over. The work has taken the form of a mirror installation on the border fence between the US and Mexico, a solo in the mountains of Iraq, a healing dance in someone’s living room in northern Norway or as a large group piece for 68 people on an opera stage. She looks for spaces where her work can interact with different audiences and with the realities of local communities.
+                    Habib is interested in work that engages in wide conversations and speaks about concerns of our time in different spaces. Spaces understood as being bodies, physical environments, contexts, communities and people. This is all contextualized within the political, social and artistic sphere in private, domestic and public spaces.
+                    Mia Habib Productions engages in and facilitates labs and research with a variety of specialists including artists, scientists, political activists and others
+                    .</p>
+                <br><br>
+                <p>Mia Habib Productions’ work has been presented in 30 countries: Austria (Burgtheater), USA (La MaMa, PICA), Germany (Tanz im August, Fabrik Potsdam, tanzhaus nrw Düsseldorf, Theatre Freiburg, Spielart festival, Kampnagel, Ponderosa, Studiobühneköln-Theaterszene Europa), France (Théâtre de la Cité internationale, Théâtre de la Ville, Centre National de la Danse, CCN Belfort, Manège scène nationale- Reims, Festival Instances, “Deprogrammation”: La Manufacture Atlantique/Place de l’Opera/ Place da la Republique), Spain (Mercat de les Flors/ Aerowaves-Spring Forward Festival), Sweden (Gothenburg Dance and Theatre festival, MDT, SITE, Atalante, LICA, Norrlandsoperan, Jönköping), Denmark (Teater Republique, Entré
+                    scenen, Odin Teatret, Ballrupptoppen theatre, Danish-Norwegian jubilee with Queen Margrethe, ICE HOT Copenhagen), Morocco (On Marche festival Marrakech: Theatre Royal, Cinema School of Marrakech), Palestine (The Freedom theatre), Mexico (Prisma, Teatro de la Danza, Mexicali/Running into the Political Equator) Madagascar (I'TRÔTRA festival), Iceland (Keðja Reykjavík), Israel (Dance in the Desert festival, Karmiel dance festival, shop31), Clipperton Island (The clipperton project), Romania (explore festival), Moldova (Center for Contemporary Art, Chisinau KSA:K, teatru-spălătorie), Finland (Athena, Jyväskylä dance festival), Switzerland (CIRQUENFLEX/Basel), Portugal (DeVIR CAPa, Sweet&Tender Porto, festival da fabrica), Italy (B.Motion Festival), Malaysia (Rimbun Dahan/The Black Box) (link til event: https://rimbundahan.org/work-it/), Belgium (The Royal Flemish Theatre), Iraq (Qundil mountains), Irland (Dublin Fringe festival), Slovenia (Festival City of Women), Syria (Reloading Images), Turkey (iDans festival), Estonia (Kanuti Giildi Saal), Czech Republic (DW7 Divadlo na Cucky), and Norway (ex: Dance House, Black Box Theatre, BIT Teatergarasjen, ULTIMA festival, Rosendal Theatre, RAS, Stavanger konserthus, Daiddadallu, Pikene på broen, Haugesund billedgalleri, Interkulturelt museum, Bærum kulturhus, Dansenett Norge, DansiT).
+                </p>
+                <h3>COLLABORATIONS / TEACHING/ MENTORING</h3>
+                <p>Habib has among others worked and collaborated with Filiz Sizanli, Tommy Noonan, Julie Nioche, Thais Di Marco, Thami Manekehla, Guilherme Garrido, Steinunn Ketilsdóttir, Rani Nair, Jassem Hindi, Brynjar Bandlien, Monica Gillette, Timo Kreuser and worked as a dancer for Carte Blanche, The Norwegian National Company of Contemporary Dance 2017-2018 under direction of artistic leader Hooman Sharifi, for whom she also made a commissioned work Gjallarhorn, (2016).</p>
+                <p>She regularly mentors the MA students in choreography at Oslo National Academy of the Arts, and has been teaching, lecturing and mentoring among other places at the Norwegian Theatre Academy, MA choreography at DasArts, Romanian and Moldavian artists under the ECF event Tandem- invited by KSAK and European Cultural Foundation, Iceland Academy of the Arts (MA and BA dance/ performance), Lund University/ Malmø theater school, Agder Teaterlab, Ravnedans Performance Lab, Ca' Foscari University Foundation- Venice, Dance Well-OperaEstate Bassano del Grappa, Umeå School of Architecture, Tipping point Montpellier/British Council, PRAKSIS Tee</p>
+            </div>
+
+            <div class="text-full">
+                <h3>SWEET & TENDER COLLABORATIONS</h3>
+                <p>Since 2004, it has been particularly important for Mia Habib Productions to seek out and support "grassroots-driven festivals”, artist-driven initiatives and underground initiatives in different parts of the world.</p>
+                <p>Since 2006 Habib has been a part of the artist collective Sweet & Tender collaborations (S&T) which is an international group of individual artists that do not share a single artistic value or aesthetic, but are instead organized around an idea for artistic collaboration and production. S&T operate on the idea that any individual who can create the conditions for their own artistic production and development can also create the space for someone else. It is the idea that a network of individuals can combine their resources to realize a level of access, mobility and growth that would not otherwise be available to each artist alone. This idea underlies much of Habib´s work and since 2004 she has worked to connect dance artists to each other. This way of working is also reflected in the upcoming projects of Mia Habib Productions which include large groups of amateurs in various countries, dance artists from all over the world and guests who are invited into projects. These plans focus on networks of people who connect across projects, geography and background.</p>
+                <h3>MORE ABOUT THE WORK OF MIA HABIB PRODUCTIONS</h3>
+                <p>How to protest, how to touch, how to fall, how to rise, how to hope, how to choose, how to dream, how to fight, how to meet, how to continue, how to share, how to change</p>
+                <p>These are questions guiding the artistic research in the coming years. In a time characterized by great uncertainty, protests around the world and population movements, Habib continues, together with other invited artists, the investigations into the physical forces that are set in motion through the large mass movements, the investigations into hospitality as well as her work with ritual practices, spaces for gathering and communities into new meetings with more people and geographies.</p>
+                <p>The projects often dissolve the boundaries between the research, production and performance phases and allow these to take place simultaneously. Furthermore, the boundaries between performer, audience, participant and discussion partner are often blurred and bleed into each other.</p>
+                <!-- Add more paragraphs as needed -->
+            </div>
         </div>
-        <div class="text">
-          <p><b>Mia Haugland Habib</b> (b. 1980, Houston) is an Oslo-based dancer, performer and choreographer working at the intersection of performance,
-            exhibitions, publications, lectures, teaching, mentoring and curating. Habib has collaborated internationally with artists such as Jassem
-            Hindi, Guilherme Garrido, Julie Nioche, Rani Nair, Brynjar Bandlien. She danced with Carte Blanche, The Norwegian National Company of Contemporary Dance,
-            from 2017-2018, for whom she also made a commissioned work. <br> <br><b>Habib’s work</b> has been presented amongst other places at: LaMaMaMoves!, TBA festival,
-            Tanz im August, Dance House Oslo, Aerowaves 2015, Black Box Theatre Oslo, BIT Teatergarasjen, Theatre Freiburg, Tanzhaus nrw Dusseldorf, Spielart
-            Festival, Gothenborg Dance and Theatre festival, On Marche Festival Marrakech, I’TRÔTRA Festival Antananariv and CODA Oslo International Dance
-            Festival. Habib holds an M.A in conflict resolution and mediation from Tel Aviv University and a choreography education from Oslo National Academy
-            of the Arts. Mia Habib established Mia Habib Productions in 2004 and is supported by the Norwegian Arts Council.</p>
-        </div>
-      </div>
-
-      <div class="text-full">
-        <p><b>Habib makes work that speaks to the major concerns of our time.</b> She engages broad audience and local communities across social, political,
-          and artistic spheres and in private, domestic, and public spaces. Over the last 15 years, her practice has taken her to dance houses, opera
-          stages, galleries, public spaces, private houses, religious buildings, squats, and sites of protest and conflict around the world, including
-          an installation on the border fence between the US and Mexico, a solo in the mountains of Iraq, a healing dance in someone’s living room,
-          and a large-scale work for 68 people on an opera stage. Habib looks for spaces where her work can interact with different audiences and with
-          the realities of local communities. <br> <br> <b>Habib is currently working on</b> her upcoming project “How to Die – Inopiné” premiering at the Norrlandsopera
-          (NO) in Umeå, Sweden February 6 in 2020. The project involves artists and researchers across disciplines to interact with local communities and
-          seeking a shared mode of articulating an intellectual response to migration, the cultural panic and ecological grief that pervade our world.
-          A co-production with Norrlandsoperan, Umeå, Sweden, Dance House, Oslo, Norway among others. During 2020 Habib is touring her piece
-          “ALL – a physical poem of protest”, – performing at Burgtheater, Wien and SwitchPoint, North Carolina, USA among other places.</p>
-      </div>
-
-      <div class="text-full">
-        <h2>ARTIST STATEMENT</h2>
-        <p>
-          Everyone’s house is the headline of MHP ́s overarching mission for the next four years. <br><br>
-          I understand theatre as a social and political space. I look for spaces where my work can interact with different audiences, local communities and realities, and engage in larger conversations beyond the work itself. My practice requires plasticity, mobility, site-sensitivity and soft borders. It is an expanding practice aiming for different people and realities to encounter each other.<br><br>
-          The ongoing tension between mass and individual and the power of meeting, are keywords in my artistry. Both looking for the obvious and the impossible encounters in different contexts while holding a culture critical perspective on body, identity, society and dance.<br><br>
-          In a publication about my mass-solo HEAD(S) my working partner Jassem Hindi writes: “And yet, a mass solo is also about a body that lets itself be invaded. Mia lets the crowd come to her, almost into her. Politically, socially, intimately. A high risk for a single body: to be given to an unknown crowd. To invert the laws of hospitality and of public theater: her house becomes everyone’s house, a radical operation”. This quote reflects MHP´s  practice: Everyone’s house.</p>
-      </div>
-
-
-
-
+        <footer-bar></footer-bar>
     </div>
-    <footer-bar></footer-bar>
-  </div>
 </template>
 
 <script lang="ts">
@@ -138,6 +134,13 @@ export default class About extends Vue {
     }
     }
   .img-wrap{
+    img{
+      max-width: 230px;
+      max-height: 300px;
+      object-fit: contain;
+        filter: grayscale(1);
+
+    }
     @media only screen and (max-width: 1050px) {
       width: 243px;
     }
