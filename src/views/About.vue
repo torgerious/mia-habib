@@ -42,6 +42,23 @@
                 <p>The projects often dissolve the boundaries between the research, production and performance phases and allow these to take place simultaneously. Furthermore, the boundaries between performer, audience, participant and discussion partner are often blurred and bleed into each other.</p>
                 <!-- Add more paragraphs as needed -->
             </div>
+            <div class="text-full">
+                <h3>CURATORIAL WORK</h3>
+                <p>Among Habib´s curatorial practices is her work with Stranger Within together with Jassem Hindi, where their ongoing research weaves in the work of other artists and shown in galleries, in their publications and social frameworks of hosting.
+                    Other curatorial work includes:
+                    Together with Jassem Hindi, Habib curated “Oslohendelser” – a series of six performative happenings in public space all over Oslo during the fall of 2021 with six different artists/ artist initiatives. Hindi and Habib were invited as guest curators by Transcultural Art Productions and Kloden theater.
+                    Link to interview: <a href="https://trap.no/prosjekt/oslohendelser-2021">https://trap.no/prosjekt/oslohendelser-2021</a>
+                    Link to podcast: <a href="https://podcasts.apple.com/no/podcast/kunstnersamtaler-jassem-hindi-og-mia-habib/id1543473387?i=1000524930350">https://podcasts.apple.com/no/podcast/kunstnersamtaler-jassem-hindi-og-mia-habib/id1543473387?i=1000524930350</a>
+                </p>
+                <p>
+                    Habib curated in 2019 together with choreographers Sudesh Adhana and Elle Sofe Sara the one-day programme, "Untaming tradition”, under the frame of Oslo International Dance festival/CODA. Presenting their own works and those of other artists, they seeked to encourage open discussions concerning identity politics, social issues and political voices.( <a href="https://codadancefest.no/en/events/untaming-tradition/">https://codadancefest.no/en/events/untaming-tradition/</a>
+                </p>
+                <p>On the occasion of Dance House Oslo 10 year jubilee in 2018 the seminar “The Artist, the Institution and the Future of Dance” was an initiative from Dance House Oslo to discuss the current situation of dance artists and its institutions and together orientate towards the future. The seminar was developed by Solveig Styve Holte in collaboration with Per Roar and Mia Habib</p>
+                <p>In 2014 Mia Habib had the artistic direction of “BrainDance”, together with Monica Gillette: a collaborative research project that brought together choreographers, neuroscientists, physicians, philosophers and people with Parkinson's disease. Produced by: Theatre Freiburg and University of Freiburg.</p>
+                <p>In 2012 Habib curated the New Dance Project, Machol Hadash, in Jerusalem at the HaZira Performance Art Arena together with dance researcher Iris Lana. The project provided young choreographers with professional guidance, production assistance and financial support.</p>
+                <p>In 2009 Habib initiated and facilitated the Sweet & Tender format «living house» at Dance House Oslo. For eight days, 12 international artists from Sweet & Tender, 7 students from the Norwegian Theatre Academy in Fredrikstad and 3 Norwegian dance artists occupied the house living and working there, making it an extension of a living room for both artists and audiences. The project was about re-contextualizing their (artists and audiences) relation to a production house (Dance house) by blurring the boundaries of a living space and a working space.</p>
+                <p><a href="https://www.dansenshus.com/en/forestillinger/living-house">https://www.dansenshus.com/en/forestillinger/living-house</a></p>
+            </div>
         </div>
         <footer-bar></footer-bar>
     </div>
@@ -122,6 +139,9 @@ export default class About extends Vue {
     display: block;
     text-align: left;
     line-height: 27px;
+      h3{
+          margin-top: 70px;
+      }
     h2{
       width:100%;
       margin-top: 50px;

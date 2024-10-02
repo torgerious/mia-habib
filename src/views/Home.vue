@@ -63,11 +63,11 @@ interface IArticle{
 
 export default class Home extends Vue {
   workList:IWork[] = [];
-  projectLinks:Array<string> = ["How to die", "Stranger within", "Photo: Yaniv Cohen"];
+  projectLinks:Array<string> = ["How to die", "Stranger within", "How"];
   projectLinksURL:Array<string> = [
-      "/article/How%20to%20Die%20-%20Inopin%C3%A9%20Publication",
+      "/article/How%20to%20die%20-%20Inopiné",
       "/article/Stranger%20Within%20Hedmark",
-      "#"];
+      "/article/HOW"];
   currentProjectLink:string = this.projectLinks[0];
   currentProjectLinkURL:string = this.projectLinksURL[0];
 

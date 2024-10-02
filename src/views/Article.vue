@@ -102,6 +102,12 @@
                 this.article = await this.getWorkById(articleId);
             }
 
+            console.log("article..", this.article)
+
+            if(this.article?.relatedArticles.length > 0){
+                this.relatedArticles = await this.fetchDataForIds(this.article?.relatedArticles)
+            }
+
             if(this.getGalleryById){
                 console.log("ARTICLE?", this.article)
                 let imageGallery = await this.getGalleryById(this.article?.imageGallerySlider as string)
@@ -116,9 +122,10 @@
 
             this.loading = false;
 
-            if(this.article?.relatedArticles.length > 0){
-            this.relatedArticles = await this.fetchDataForIds(this.article?.relatedArticles)
-            }
+            console.log("runnnning?")
+
+
+
             console.log("the fuck res", this.relatedArticles)
 
             if(!this.loading){

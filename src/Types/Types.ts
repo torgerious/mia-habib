@@ -3,8 +3,12 @@
 
 import {Category} from "@/store/work";
 
-export const category:Category[] = [Category.all,  Category.performances, Category.films, Category.publications, Category.archive];
-export const workCategory:Category[] = [Category.all, Category.performances, Category.publications, Category.films, Category.archive];
+export const category:Category[] = [Category.all,  Category.performances,
+    // Category.films,
+    Category.publications, Category.archive];
+export const workCategory:Category[] = [Category.all, Category.performances, Category.publications,
+    // Category.films,
+    Category.archive];
 // export const pressCategory:Category[] = [ Category.media, Category.interview, Category.reviews];
 export const noMediaToolbar = [
     [{ header: [false, 1, 2, 3, 4, 5, 6] }],

@@ -25,13 +25,15 @@
 
             <nav>
                 <p @click="navigate('work?filter=performances')">Performances</p>
-                <p @click="navigate('work?filter=projects')">Projects</p>
+                <p @click="navigate('work')">Projects</p>
                 <p @click="navigate('work?filter=publications')">Publications</p>
-                <p @click="navigate('work?filter=films')">Films</p>
-<!--                <p @click="navigate('press')">Press</p>-->
+<!--                <p @click="navigate('work?filter=films')">Films</p>-->
                 <p @click="navigate('calendar')">Calendar</p>
                 <p @click="navigate('people')">People</p>
-                <p @click="navigate('presenters')">Presenters</p>
+                <p @click="navigate('about')">About</p>
+                <p @click="navigate('contact')">Contact</p>
+
+                <!--                <p @click="navigate('presenters')">Presenters</p>-->
 
             </nav>
         </div>

@@ -63,7 +63,8 @@ export default class Article extends Vue {
 
   async created(): Promise<void> {
     if(this.getCalendarEvents) {
-      this.calendarEvents = await this.getCalendarEvents();
+      const tempCalendar = await this.getCalendarEvents();
+        this.calendarEvents = tempCalendar.reverse();
     }
 
   }
