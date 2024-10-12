@@ -5,6 +5,7 @@ import {work} from "@/store/work";
 import {menuModal} from "@/store/menuModal";
 import {calendarEvent} from "@/store/calendarEvent";
 import {imageGallery} from "@/store/imageGallery";
+import { people } from './people';
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ export const store =  new Vuex.Store({
     work,
     menuModal,
     calendarEvent,
-    imageGallery
+    imageGallery,
+    people
   }
 });
