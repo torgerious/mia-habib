@@ -8,7 +8,8 @@
       <button class="post-btn" :class="{activeTab: activeTab === 1}" @click="activeTab = 1"> Artikler</button>
       <button class="post-btn" :class="{activeTab: activeTab === 2}" @click="activeTab = 2"> Kalender</button>
       <button class="post-btn" :class="{activeTab: activeTab === 3}" @click="activeTab = 3"> Presenters</button>
-        <button class="post-btn" :class="{activeTab: activeTab === 4}" @click="activeTab = 4"> Galleri slider</button>
+      <button class="post-btn" :class="{activeTab: activeTab === 4}" @click="activeTab = 4"> Galleri slider</button>
+      <button class="post-btn" :class="{activeTab: activeTab === 5}" @click="activeTab = 5"> Personer</button>
 
 
       <div class="add-wrapper" v-if="isShowingWorkForm">
@@ -25,7 +26,7 @@
             <p>Tittel</p>
             <input type="text" placeholder="title" v-model="title">
 
-            <p>Kattegori</p>
+            <p>Kategori</p>
             <select v-model="selected">
                 <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all projects'">{{cate}}</option>
             </select>
@@ -186,7 +187,7 @@
             <p>Prioritet rekkefølge (1 = øverst)</p>
             <input type="number" placeholder="Prioritet" v-model="currentEditingArticle.priority">
 
-          <p>Kattegori</p>
+          <p>Kategori</p>
           <select v-model="currentEditingArticle.category">
             <option v-for="(cate, i) in localCategory" :key="i" v-if="cate !== 'all topics'">{{cate}}</option>
           </select>
@@ -247,7 +248,7 @@
           <p>Tittel</p>
           <input type="text" placeholder="title" v-model="currentEditingCalendarEvent.title">
 
-          <p>Kattegori</p>
+          <p>Kategori</p>
           <input type="date" v-model="currentEditingCalendarEvent.date">
 
           <div class="editor-wrapper">
@@ -279,6 +280,75 @@
         </div>
 
 
+        <!-- PEOPLE LIST -->
+        <div class="list-header" v-if="activeTab === 5">
+          <button class="add" @click="isShowingNewPersonForm = true">legg til ny +</button>
+          <p >Personer</p>
+        </div>
+        <div class="post-wrapper" v-if="activeTab === 5">
+          <article
+                  class="post"
+                  v-for="(people, i) in this.people" :key="people.id">
+              <p class="calendar-date">{{people.name}}</p>
+              <p class="calendar-date prevent-break-line"><span>{{people.profession}}</span></p>
+              <button @click="openEditPersonBox(people)">Edit</button>
+          </article>
+        </div>
+
+      <!-- EDITING PERSON -->
+      <div v-if="isEditingPerson" class="add-wrapper">
+        <div class="content" v-if="isEditingPerson">
+          <button class="exit" @click="isEditingPerson = false">Exit</button>
+
+          <button class="delete" @click="deletePerson(currentEditingPerson)"><span>🗑</span>Delete person</button>
+
+          <p>Name</p>
+          <input type="text" placeholder="Name" v-model="currentEditingPerson.name">
+
+          <p>Profession</p>
+          <input type="text" placeholder="Profession" v-model="currentEditingPerson.profession">
+
+          <p>Upload image</p>
+          <input type="file" @change="onPersonImageUpload">
+          <img class="preview-image" v-if="previewImageUrl" :src="previewImageUrl" alt="random" />
+
+          <div class="editor-wrapper">
+            <vue-editor v-model="currentEditingPerson.description"
+                        useCustomImageHandler
+                        @image-added="handleImageAdded">
+            </vue-editor>
+          </div>
+          <button class="update-btn" @click="editPerson()">Update person</button>
+        </div>
+      </div>
+     
+      <!-- ADD NEW PERSON FORM -->
+      <div class="add-wrapper" v-if="isShowingNewPersonForm">
+        <div class="content">
+          <h3>Opprett ny person</h3>
+          <span @click="isShowingNewPersonForm = false">Exit</span>
+
+          <p>Name</p>
+          <input type="text" placeholder="Name" v-model="title">
+
+          <p>Profession</p>
+          <input type="text" placeholder="Profession" v-model="subTitle">
+
+          <p>Upload image</p>
+          <input type="file" @change="onPersonImageUpload">
+          <img class="preview-image" v-if="previewImageUrl" :src="previewImageUrl" alt="random" />
+
+          <div class="editor-wrapper">
+            <vue-editor v-model="content"
+                        useCustomImageHandler
+                        @image-added="handleImageAdded">
+            </vue-editor>
+          </div>
+
+          <button class="submit-btn" v-if="!loading" @click="addPerson()">Post</button>
+          <p v-if="loading">uploading.. </p>
+        </div>
+      </div>
 
 
     </div>
@@ -296,6 +366,7 @@ import Loader from "@/components/loader.vue";
 import {actionStringCalendarEvent, getterStringCalendarEvent, ICalendarEvent} from "@/store/calendarEvent";
 import MultipleFileUploader from "@/components/MultipleFileUploader.vue";
 import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
+import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people';
 
 
 @Component({
@@ -316,6 +387,11 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         @Action(actionStringCalendarEvent.DELETE_CALENDAR_EVENT) deleteCalendarEvent:((calendarId:string) => Promise<any>) | undefined;
         @Action(actionStringWork.DELETE_WORK_BY_ID) deleteWorkById:((workId:string) => Promise<any>) | undefined;
         @Action(actionStringWork.DELETE_GALLERY_BY_ID) deleteGalleryById:((id:string) => Promise<any>) | undefined;
+        @Getter(getterStringPeople.PEOPLE) people!: IPeople[];
+        @Action(actionStringPeople.GET_PEOPLE) getPeople: () => Promise<void>;
+        @Action(actionStringPeople.POST_PEOPLE) postPeople: (newPeople: IPeople) => Promise<void>;
+        @Action(actionStringPeople.DELETE_PEOPLE) deletePeople: (peopleId: string) => Promise<void>;
+        @Action(actionStringPeople.UPDATE_PEOPLE) updatePeople: (updatedPeople: IPeople) => Promise<void>;
 
         @Action(actionStringImageGallery.POST_GALLERY_SLIDER) postGallerySlider: ((imageGallery: IimageGallery) => Promise<void>) | undefined;
         @Action(actionStringImageGallery.GET_GALLERY_SLIDER) getGallerySlider: (() => Promise<IimageGallery[]>) | undefined;
@@ -334,6 +410,7 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         selected:Category = Category.performances;
         selectedGallery:string = "";
         title:string = "";
+        subTitle:string = "";
         content:any = null;
         previewImageUrl:string = "";
         workToBePosted:IWork | null = null;
@@ -347,6 +424,9 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         activeTab:number | null = null;
         isShowingCalendarForm:boolean = false;
         isShowingGalleryForm:boolean = false;
+        isShowingNewPersonForm:boolean = false;
+        isEditingPerson:boolean = false;
+        currentEditingPerson:IPeople|null = null;
         calendarTitle:string = "";
         calendarDate:string = "";
         calendarText:any = null;
@@ -479,7 +559,28 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         }
 
 
+    async onPersonImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        try {
+          let storageRef = STORAGE.ref();
+          let uploadTask = storageRef.child("people/" + file.name).put(file);
 
+          uploadTask.on('state_changed', (snapshot) => {
+            let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+          }, (error) => {
+            console.error("Error uploading the image:", error);
+          }, async () => {
+            let downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+            console.log('Person image available at', downloadURL);
+            this.previewImageUrl = downloadURL;
+          });
+        } catch (error) {
+          console.error("Error uploading person image:", error);
+        }
+      }
+  }
 
 
 
@@ -728,6 +829,49 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
         }
     }
 
+    async deletePerson(person:IPeople):Promise<void>{
+      let deletePerson = confirm("Are you sure you want to delete this person?");
+      if (deletePerson) {
+        await this.deletePeople(person.id);
+        this.isEditingPerson = false;
+        if (person.image !== ''){
+          const imageRef = STORAGE.refFromURL(person.image);
+          await imageRef.delete();
+        }
+      }
+    }
+   
+    openEditPersonBox(people: IPeople) {
+      this.currentEditingPerson = people
+      this.isEditingPerson = true
+    }
+
+    async editPerson():promise <void> {
+      this.currentEditingPerson.image = this.previewImageUrl
+
+      if (this.currentEditingPerson.name === '') {
+        alert('Missing name field')
+      }
+      else {
+        await this.updatePeople(this.currentEditingPerson)
+        this.isEditingPerson = false
+      }
+    }
+
+    async addPerson() {
+      let person = {
+          name: this.title,
+          profession: this.subTitle,
+          description: this.content,
+          image: this.previewImageUrl,
+        }
+        if (person.name === ''){ alert('Missing name field') }
+        else {
+          await this.postPeople(person)
+          this.isShowingNewPersonForm = false
+        }
+    }
+
       async addCalendarEvent():Promise<void>{
         let calendarEventToBePosted:ICalendarEvent = {title:this.calendarTitle, date:this.calendarDate, text:this.calendarText};
         if(this.postCalendarEvent){
@@ -810,6 +954,14 @@ import {actionStringImageGallery, IimageGallery} from "@/store/imageGallery";
                 }
             });
 
+            // FETCH PEOPLE DB
+            if (this.getPeople) {
+                this.loading = true;
+                this.getPeople().catch(err => {
+                  console.error('Error fetching people:', err);
+                });
+                this.loading = false;
+            }
 
             if (this.getWork) {
                 this.loading = true;
