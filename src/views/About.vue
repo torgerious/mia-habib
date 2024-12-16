@@ -124,7 +124,6 @@ export default class About extends Vue {
     padding: 0 50px;
     text-align: left;
     line-height: 25px;
-    margin-top: -18px;
     @media only screen and (max-width: 1050px) {
       width: 100%;
       padding: 0 50px;

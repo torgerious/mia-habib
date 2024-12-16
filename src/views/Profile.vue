@@ -282,7 +282,7 @@
 
         <!-- PEOPLE LIST -->
         <div class="list-header" v-if="activeTab === 5">
-          <button class="add" @click="isShowingNewPersonForm = true">legg til ny +</button>
+          <button class="add" @click="openAddNewPersonBox">legg til ny +</button>
           <p >Personer</p>
         </div>
         <div class="post-wrapper" v-if="activeTab === 5">
@@ -840,14 +840,20 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
         }
       }
     }
+
+    openAddNewPersonBox() {
+      this.previewImageUrl = ''
+      this.isShowingNewPersonForm = true
+    }
    
     openEditPersonBox(people: IPeople) {
       this.currentEditingPerson = people
       this.isEditingPerson = true
+      this.previewImageUrl = this.currentEditingPerson.image || 'default.png'
     }
 
     async editPerson():promise <void> {
-      this.currentEditingPerson.image = this.previewImageUrl
+      this.currentEditingPerson.image = this.previewImageUrl || 'default.png'      
 
       if (this.currentEditingPerson.name === '') {
         alert('Missing name field')
@@ -855,6 +861,7 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
       else {
         await this.updatePeople(this.currentEditingPerson)
         this.isEditingPerson = false
+        this.previewImageUrl = ''
       }
     }
 
@@ -863,7 +870,7 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
           name: this.title,
           profession: this.subTitle,
           description: this.content,
-          image: this.previewImageUrl,
+          image: this.previewImageUrl || 'default.png',
         }
         if (person.name === ''){ alert('Missing name field') }
         else {
