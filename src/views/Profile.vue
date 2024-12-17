@@ -883,7 +883,6 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
           priority: Number(this.priority)
         }
         if (person.name === ''){ alert('Missing name field') }
-        else if (Number.isInteger(person.priority) === false) { alert('Missing priority number') }
         else {
           await this.postPeople(person)
           this.isShowingNewPersonForm = false
