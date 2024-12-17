@@ -451,6 +451,7 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
         addNew(){
             this.previewIngressImageUrl = "";
             this.isShowingWorkForm = true
+            this.priority = 0
         }
 
   setCategory(category:Category):void{
