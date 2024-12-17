@@ -291,6 +291,7 @@
                   v-for="(people, i) in this.people" :key="people.id">
               <p class="calendar-date">{{people.name}}</p>
               <p class="calendar-date prevent-break-line"><span>{{people.profession}}</span></p>
+              <p class="person-priority">{{people.priority}}</p>
               <button @click="openEditPersonBox(people)">Edit</button>
           </article>
         </div>
@@ -307,6 +308,9 @@
 
           <p>Profession</p>
           <input type="text" placeholder="Profession" v-model="currentEditingPerson.profession">
+
+          <p>Prioriter rekkefølge (1 = øverst)</p>
+          <input type="number" placeholder="Prioritet" v-model="currentEditingPerson.priority">
 
           <p>Upload image</p>
           <input type="file" @change="onPersonImageUpload">
@@ -333,6 +337,9 @@
 
           <p>Profession</p>
           <input type="text" placeholder="Profession" v-model="subTitle">
+
+          <p>Prioriter rekkefølge (1 = øverst)</p>
+          <input type="number" placeholder="Prioritet" v-model="priority">
 
           <p>Upload image</p>
           <input type="file" @change="onPersonImageUpload">
@@ -844,6 +851,7 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
     openAddNewPersonBox() {
       this.previewImageUrl = ''
       this.isShowingNewPersonForm = true
+      this.priority = this.people.length+1
     }
    
     openEditPersonBox(people: IPeople) {
@@ -871,8 +879,10 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
           profession: this.subTitle,
           description: this.content,
           image: this.previewImageUrl || 'default.png',
+          priority: Number(this.priority)
         }
         if (person.name === ''){ alert('Missing name field') }
+        else if (Number.isInteger(person.priority) === false) { alert('Missing priority number') }
         else {
           await this.postPeople(person)
           this.isShowingNewPersonForm = false
@@ -1230,6 +1240,7 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
           background: #ff3780 !important;
         }
         .post{
+            position: relative;
             width: 100%;
             background: #f8f8f8;
             border-radius: 5px;
@@ -1264,6 +1275,13 @@ import { actionStringPeople, getterStringPeople, IPeople } from '@/store/people'
                 color: white;
               padding: 4px 12px;
             }
+
+            .person-priority {
+              position:absolute;
+              right:60px;
+              width:50px;
+            }
+
           .calendar-date{
             width:200px;
           }
