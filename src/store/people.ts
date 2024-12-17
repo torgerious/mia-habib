@@ -12,7 +12,8 @@ export interface IPeople {
     name: string,
     profession?: string,
     description?: string,
-	image?: string
+	image?: string,
+    priority: number
 }
 
 export const enum IPeopleMutationString {
@@ -58,6 +59,7 @@ export const actions: ActionTree<PeopleState, any> = {
                     peopleData.id = people.id
                     peopleList.push(peopleData);
                 });
+                peopleList.sort((a, b) => a.priority - b.priority);
                 commit(IPeopleMutationString.SET_PEOPLE, peopleList);
                 resolve(peopleList);
             }).catch((err) => {
