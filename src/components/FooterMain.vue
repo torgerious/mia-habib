@@ -27,17 +27,9 @@
           +47 90 16 88 82
         </p>
 
-            <br>
-
-        <p>
-            Ida Frømyr Borgen | Managing director and producer <br>
-            <div class="line"></div>
-            ida@miahabibproductions.com<br>
-            +47 47 31 87 92
-        </p>
         <br>
         <p>
-          Frida Skinner | Managing Director and producer (on maternity leave) <br>
+          Frida Skinner | Managing Director and producer <br>
             <div class="line"></div>
           frida@miahabibproductions.com<br>
           +47 48 28 97 88
